@@ -11,8 +11,7 @@ import {
   WaitlistConfirmation,
   waitlistConfirmationText,
 } from "@/components/emails/waitlist-confirmation";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+import { siteUrl } from "./site";
 
 /**
  * Overridable so a dev without access to the verified domain can point at

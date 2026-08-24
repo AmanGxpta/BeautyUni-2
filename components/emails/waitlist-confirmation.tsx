@@ -17,25 +17,33 @@ const PAPER = "#111111";
 const SURFACE = "#1C1C1C";
 const INK = "#F0EDE8";
 const INK_2 = "#B8B4AE";
-const INK_3 = "#777370";
 const CLAY = "#8C1A1A";
 const LINE = "#2E2C2A"; // --line flattened: rgba(240,237,232,.10) over --paper
-const SANS = "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+const SANS =
+  "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
 const SERIF = "'Playfair Display', Georgia, 'Times New Roman', serif";
 
 const HEADLINE = "Thanks for being interested in Rockstar.";
 
 const BODY = [
-  "We\u2019re still building Rockstar, and we\u2019re taking the time to get the learning experience right before we open it up more widely.",
   "You\u2019ve joined the list for early access. We\u2019ll email you as we get closer to launch and let you know when there\u2019s an opportunity to try it.",
 ];
 
 const STEPS_LEAD = "In the meantime, we\u2019re building around three things:";
 
 const STEPS: Array<[string, string]> = [
-  ["Learn", "Short, practical lessons designed for working beauty professionals."],
-  ["Practice", "Interactive learning that helps turn new knowledge into real skills."],
-  ["Progress", "Expert feedback and certifications that help you keep developing."],
+  [
+    "Learn",
+    "Short, practical lessons designed for working beauty professionals.",
+  ],
+  [
+    "Practice",
+    "Interactive learning that helps turn new knowledge into real skills.",
+  ],
+  [
+    "Progress",
+    "Expert feedback and certifications that help you keep developing.",
+  ],
 ];
 
 const SIGN_OFF = "We\u2019ll keep you posted";
@@ -43,7 +51,14 @@ const SIGN_OFF = "We\u2019ll keep you posted";
 export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, padding: 0, backgroundColor: PAPER, fontFamily: SANS }}>
+      <body
+        style={{
+          margin: 0,
+          padding: 0,
+          backgroundColor: PAPER,
+          fontFamily: SANS,
+        }}
+      >
         {/* Shown in the inbox list preview, never in the open email. */}
         <div
           style={{
@@ -55,8 +70,8 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
             maxWidth: 0,
           }}
         >
-          You&rsquo;re on the list for early access — we&rsquo;ll email you as we get closer
-          to launch.
+          You&rsquo;re on the list for early access — we&rsquo;ll email you as
+          we get closer to launch.
         </div>
 
         <table
@@ -87,7 +102,12 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
                           alt="Rockstar"
                           width={150}
                           height={55}
-                          style={{ display: "block", width: "150px", height: "55px", border: 0 }}
+                          style={{
+                            display: "block",
+                            width: "150px",
+                            height: "55px",
+                            border: 0,
+                          }}
                         />
                       </td>
                     </tr>
@@ -133,7 +153,8 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
                           <p
                             key={para}
                             style={{
-                              margin: i === BODY.length - 1 ? "0 0 26px" : "0 0 16px",
+                              margin:
+                                i === BODY.length - 1 ? "0 0 26px" : "0 0 16px",
                               fontFamily: SANS,
                               fontSize: "16px",
                               lineHeight: 1.65,
@@ -150,7 +171,10 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
                           cellPadding={0}
                           cellSpacing={0}
                           border={0}
-                          style={{ borderTop: `1px solid ${LINE}`, paddingTop: "6px" }}
+                          style={{
+                            borderTop: `1px solid ${LINE}`,
+                            paddingTop: "6px",
+                          }}
                         >
                           <tbody>
                             <tr>
@@ -237,23 +261,6 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
                         </table>
                       </td>
                     </tr>
-
-                    {/* Footer */}
-                    <tr>
-                      <td style={{ padding: "26px 6px 0" }}>
-                        <p
-                          style={{
-                            margin: 0,
-                            fontFamily: SANS,
-                            fontSize: "13px",
-                            lineHeight: 1.6,
-                            color: INK_3,
-                          }}
-                        >
-                          Questions? Just reply to this email.
-                        </p>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               </td>
@@ -278,8 +285,5 @@ export function waitlistConfirmationText(): string {
     ...STEPS.map(([title, body]) => `* ${title} — ${body}`),
     "",
     `${SIGN_OFF}.`,
-    "",
-    "—",
-    "Questions? Just reply to this email.",
   ].join("\n");
 }

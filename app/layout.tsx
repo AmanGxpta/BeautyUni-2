@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, Playfair_Display, Raleway } from "next/font/google";
 import "./globals.css";
+import { siteUrl } from "@/lib/site";
 
 /* The STRIPPED theme's three faces, self-hosted by next/font and wired into
    the --display / --ui / --word tokens in globals.css. */
@@ -23,7 +24,6 @@ const raleway = Raleway({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 const title = "Rockstar — Learn the craft in thirty seconds";
 const description =
