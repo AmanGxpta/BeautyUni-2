@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// One row per person on the waitlist.
+///
+/// `email` is unique so a repeat signup is a no-op rather than a duplicate
+/// row — `joinWaitlist` reports it back as `alreadyOnList`. Addresses are
+/// normalized (trimmed + lowercased) before they get here, so the unique
+/// index is doing real work rather than letting case variants through.
+///
+/// `source` stays a plain string rather than a Postgres enum: it records
+/// which CTA the signup came from, and a new CTA should not need a migration
+/// before it can start collecting.
+model WaitlistSignup {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String   @default("api")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@map("waitlist_signups")
+}

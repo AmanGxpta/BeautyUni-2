@@ -1,26 +1,377 @@
-@import "tailwindcss";
+/* ────────────────────────────────────────────────────────────────────
+   Rockstar — global stylesheet
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+   Two parts, in the same order the design bundle loaded them:
+     1. assets/rockstar-stripped.css  — the STRIPPED theme tokens
+     2. the <style> block from "Rockstar Landing.html" — landing layout
+
+   Tailwind is imported WITHOUT preflight: the design ships a complete
+   hand-authored CSS system that was authored against default UA styles,
+   so a second reset would silently shift it. Utilities stay available.
+   ──────────────────────────────────────────────────────────────────── */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* ══════════════════════════════════════════════════════════════════
+   1. Rockstar — STRIPPED theme (dark editorial)
+   deep charcoal surfaces · signature editorial red · warm cream text.
+   Fonts are self-hosted through next/font (see app/layout.tsx):
+   Raleway (wordmark/eyebrows) · Playfair Display (headlines) · DM Sans (body/UI).
+   ══════════════════════════════════════════════════════════════════ */
+:root{
+  /* dark surfaces — style guide: Dark / Dark 2 / Dark 3 / Dark 4 */
+  --paper:#111111;        /* Dark — page background */
+  --surface:#1C1C1C;      /* Dark 2 — card, panel surfaces */
+  --paper-2:#252525;      /* Dark 3 — nested elements */
+  --paper-3:#333333;      /* Dark 4 — hover states, wells */
+
+  /* warm parchment */
+  --ink:#F0EDE8;          /* Cream — primary text, logo field (never pure white) */
+  --cream-2:#E8E4DE;      /* secondary use */
+  --cream-3:#D8D3CC;      /* muted / code surfaces */
+  --ink-2:#B8B4AE;        /* text secondary — body, descriptions */
+  --ink-3:#777370;        /* text muted — labels, metadata, hints */
+
+  /* borders — style guide keeps these at 0.5px width */
+  --line:rgba(240,237,232,.10);     /* border default */
+  --line-2:rgba(240,237,232,.18);   /* border mid */
+  --line-3:rgba(240,237,232,.28);   /* border strong */
+
+  /* Rockstar Red — the sole accent; CTAs, active states, key accents only */
+  --clay:#8C1A1A;         /* Red — primary */
+  --clay-hover:#A82020;   /* Red — hover */
+  --clay-muted:#6B1414;   /* Red — pressed, active borders */
+  --clay-faint:#2A0D0D;   /* Red — active card wash */
+  --clay-deep:#E06060;    /* badge text on a red tint */
+  --clay-tint:rgba(140,26,26,.18);  /* red badge background */
+  --clay-wash:rgba(140,26,26,.06);  /* red active wash */
+  --rose:#C96A6A;         /* soft red — likes / accents */
+  --rose-tint:rgba(201,106,106,.16);
+  --gold:#C99A5C;         /* premium / certification (muted brass) */
+  --gold-tint:rgba(201,154,92,.16);
+  --leaf:#7EC99A;         /* success / pass */
+  --leaf-tint:rgba(34,85,44,.30);
+  --berry:#B58AA6;        /* community accent */
+  --berry-tint:rgba(154,91,122,.20);
+
+  /* type — the --font-* vars are injected by next/font */
+  --display:var(--font-playfair), Georgia, serif;
+  --ui:var(--font-dm-sans), system-ui, sans-serif;
+  --word:var(--font-raleway), system-ui, sans-serif;
+
+  /* radii — tighter, editorial */
+  --r-card:14px;
+  --r-md:12px;
+  --r-sm:10px;
+
+  /* shadows — near-invisible on charcoal; depth comes from surface contrast */
+  --sh-1:0 1px 2px rgba(0,0,0,.35);
+  --sh-2:0 6px 18px rgba(0,0,0,.45);
+  --sh-3:0 18px 44px rgba(0,0,0,.6);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+*{box-sizing:border-box;}
+.rs, .rs *{font-family:var(--ui); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;}
+.rs{color:var(--ink);}
+
+/* type helpers */
+.rs-display{font-family:var(--display); font-weight:700; letter-spacing:-.01em; line-height:1.08;}
+/* --clay on a charcoal surface is 2.05:1 — far under the 4.5:1 these small
+   wide-tracked caps need. --clay-deep is the guide's red-text token (5.4:1). */
+.rs-eyebrow{font-family:var(--word); font-weight:200; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--clay-deep);}
+
+.rs-spark{display:inline-block; color:var(--clay);}
+
+/* generic placeholder media (no photos available) */
+.rs-ph{
+  position:relative; overflow:hidden; background:
+    linear-gradient(140deg, #1C1C1C, #252525 55%, #2A0D0D);
+  display:flex; align-items:center; justify-content:center;
+}
+.rs-ph::after{
+  content:""; position:absolute; inset:0;
+  background:
+    radial-gradient(140px 140px at 78% 22%, rgba(240,237,232,.06), transparent 60%),
+    repeating-linear-gradient(45deg, rgba(240,237,232,.03) 0 12px, transparent 12px 24px);
+}
+.rs-ph > *{position:relative; z-index:1;}
+.rs-ph-dark{background:linear-gradient(160deg,#161616,#1C1C1C 60%,#241012);}
+
+/* scrollbars hidden inside phone screens */
+.rs-noscroll::-webkit-scrollbar{display:none;}
+.rs-noscroll{scrollbar-width:none;}
+
+/* ══════════════════════════════════════════════════════════════════
+   2. Landing page
+   ══════════════════════════════════════════════════════════════════ */
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink)}
+.lp{overflow-x:clip}
+.lp a{color:var(--clay-deep);text-decoration:none}
+.lp a:hover{color:var(--ink)}
+.sec{position:relative;padding:132px 40px}
+.sec-in{max-width:1200px;margin:0 auto}
+.sec-h2{font-size:clamp(34px,4.2vw,58px);margin:14px 0 18px;max-width:16em}
+.sec-lede{font-size:17.5px;line-height:1.7;color:var(--ink-2);max-width:52ch;margin:0}
+.rv{}
+
+/* phone bezel */
+.ph-wrap{position:relative;flex:none}
+.ph-var{width:calc(410px*var(--ps));height:calc(864px*var(--ps))}
+.ph-var .ph{transform:scale(var(--ps))}
+.ph{width:410px;height:864px;transform-origin:top left;border-radius:54px;background:#050505;padding:10px;position:relative;box-shadow:0 40px 90px rgba(0,0,0,.65),0 0 0 1px rgba(240,237,232,.12),inset 0 0 0 1px rgba(240,237,232,.06)}
+.ph-screen{width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;background:var(--paper)}
+.ph-island{position:absolute;top:22px;left:50%;transform:translateX(-50%);width:112px;height:30px;border-radius:20px;background:#050505;z-index:40}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:background .3s,border-color .3s,backdrop-filter .3s;border-bottom:1px solid transparent}
+.nav.solid{background:rgba(17,17,17,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom-color:var(--line)}
+.nav-in{max-width:1200px;margin:0 auto;padding:16px 40px;display:flex;align-items:center;gap:36px}
+.nav-brand{display:flex;align-items:center}
+.nav-links{display:flex;gap:30px;margin-left:auto}
+.nav-links a{font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2)}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{background:var(--clay);color:#F0EDE8!important;font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:12px 22px;border-radius:999px;white-space:nowrap;transition:background .2s}
+.nav-cta:hover{background:var(--clay-hover,#A82020)}
+.nav-bar{height:2px;background:var(--clay);transform-origin:0 50%;transform:scaleX(0)}
+
+/* hero */
+.hero{position:relative;padding:120px 40px 44px;overflow:hidden}
+.hero-glow{position:absolute;top:-160px;right:-6%;width:1000px;height:900px;pointer-events:none;background:radial-gradient(46% 46% at 62% 40%,rgba(140,26,26,.42),transparent 70%),radial-gradient(30% 30% at 30% 70%,rgba(201,106,106,.12),transparent 70%)}
+.hero-in{position:relative;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:60px;align-items:center}
+.hero-eyebrow{font-size:11px}
+.hero-h1{font-size:clamp(42px,5.4vw,72px);line-height:1;margin:18px 0 22px;letter-spacing:-.025em}
+.hero-sub{font-size:17px;line-height:1.62;color:var(--ink-2);max-width:46ch;margin:0 0 30px}
+.hero-trust{display:flex;align-items:center;gap:14px;margin-top:30px;font-size:13.5px;color:var(--ink-3)}
+.hero-faces{display:flex}
+.hero-faces>*{margin-left:-9px;box-shadow:0 0 0 2px var(--paper)}
+.hero-faces>*:first-child{margin-left:0}
+/* width:fit-content so the chip below can anchor to the phone rather than to
+   the whole grid column — otherwise it drifts as --ps shrinks the phone. */
+.hero-device{position:relative;display:flex;justify-content:center;width:fit-content;margin-inline:auto;--ps:.9}
+/* The hero reads as one frame, so the phone is sized off the viewport height:
+   864px*--ps has to clear the 164px of hero padding at the SHORT end of each
+   band. 50px bands keep the phone as large as each band actually allows —
+   coarser steps would size every viewport for the worst case in its range. */
+@media (max-height:1000px){.hero-device{--ps:.88}}
+@media (max-height:950px){.hero-device{--ps:.82}}
+@media (max-height:900px){.hero-device{--ps:.76}}
+@media (max-height:850px){.hero-device{--ps:.71}}
+@media (max-height:800px){.hero-device{--ps:.65}}
+@media (max-height:750px){.hero-device{--ps:.59}}
+@media (max-height:700px){.hero-device{--ps:.53}}
+.hero-chip{position:absolute;right:65%;bottom:42%;width:max-content;display:flex;align-items:center;gap:12px;background:rgba(28,28,28,.9);backdrop-filter:blur(14px);border:1px solid var(--line-2);border-radius:16px;padding:13px 18px 13px 14px;box-shadow:var(--sh-3);animation:float 6s ease-in-out infinite}
+.hero-chip-ic{width:34px;height:34px;border-radius:10px;background:var(--clay);display:grid;place-items:center;flex:none}
+.hero-chip b{display:block;font-size:13.5px}
+.hero-chip i{display:block;font-style:normal;font-size:12px;color:var(--ink-3);margin-top:2px}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+
+/* waitlist */
+.wl-row{display:flex;gap:10px;max-width:470px}
+.wl input{flex:1;min-width:0;height:56px;border-radius:999px;border:none;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line-2);color:var(--ink);font-family:var(--ui);font-size:15.5px;padding:0 22px;outline:none;transition:box-shadow .2s}
+.wl input::placeholder{color:var(--ink-3)}
+.wl input:focus{box-shadow:inset 0 0 0 2px var(--clay)}
+.wl button{height:56px;padding:0 28px;border:none;border-radius:999px;background:var(--clay);color:#F0EDE8;font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;display:inline-flex;align-items:center;gap:10px;white-space:nowrap;transition:background .2s,transform .2s}
+.wl button:hover{background:#A82020;transform:translateY(-1px)}
+.wl button[disabled]{opacity:.62;cursor:progress;transform:none}
+.wl-note{margin:14px 0 0;font-weight:300;font-size:13px;color:var(--ink-3);max-width:44ch}
+.wl-err{margin:12px 0 0;font-size:13px;font-weight:600;color:var(--clay-deep);max-width:44ch}
+.wl.big .wl-row{margin:0 auto}
+.wl.big .wl-note,.wl.big .wl-err{margin-left:auto;margin-right:auto;text-align:center}
+.wl.big .wl-note{margin-top:16px}
+.wl-done{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line-2);border-radius:20px;padding:18px 22px;max-width:470px}
+.wl-done.big{margin:0 auto}
+.wl-tick{width:34px;height:34px;border-radius:999px;background:var(--clay);display:grid;place-items:center;flex:none}
+.wl-done-t{font-weight:700;font-size:15px}
+.wl-done-b{font-size:13px;color:var(--ink-2);margin-top:2px}
+
+/* how */
+.how{padding-top:40px}
+.how-head{max-width:760px}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:64px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.how-card{background:var(--paper);padding:36px 34px 40px}
+.how-n{font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--clay-deep)}
+.how-ic{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--clay-tint);margin:22px 0 18px}
+.how-card h3{font-family:var(--display);font-weight:700;font-size:26px;margin:0 0 10px;letter-spacing:-.02em}
+.how-card p{margin:0;font-size:15px;line-height:1.65;color:var(--ink-2)}
+
+/* scrollytelling showcase */
+.show{position:relative;padding:0 0 40px}
+.show-in{max-width:1200px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:70px;align-items:start}
+.show-rail{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+.show-device{position:relative;display:flex;align-items:center;justify-content:center;--ps:.72;--ps-side:.56;width:calc(410px*var(--ps));height:calc(864px*var(--ps))}
+@media (max-height:860px){.show-device{--ps:.6;--ps-side:.47}}
+@media (max-height:720px){.show-device{--ps:.48;--ps-side:.38}}
+.show-glow{position:absolute;width:min(520px,130%);aspect-ratio:1;border-radius:999px;background:radial-gradient(circle,rgba(140,26,26,.34),transparent 66%);z-index:0}
+/* Static flankers — pushed back and dimmed so the animating phone stays the
+   subject. They inherit --ps-side, so the whole group scales as one. */
+.show-side{position:absolute;top:50%;left:50%;--ps:var(--ps-side);z-index:1;opacity:.52;filter:brightness(.8) saturate(.85);pointer-events:none}
+.show-side-l{transform:translate(-50%,-50%) translate(-70%,3%)}
+.show-side-r{transform:translate(-50%,-50%) translate(70%,3%)}
+.show-frame{position:absolute;opacity:0;z-index:3}
+.show-frame-1{opacity:1}
+.show-steps{display:flex;flex-direction:column}
+.show-step{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:60px 0}
+.show-kick{font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--clay-deep)}
+.show-h2{font-size:clamp(32px,3.7vw,52px);margin:14px 0 18px;letter-spacing:-.025em;max-width:18ch}
+.show-b{font-size:17.5px;line-height:1.7;color:var(--ink-2);max-width:46ch;margin:0 0 22px}
+.show-pts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+.show-pts li{display:flex;align-items:flex-start;gap:11px;font-size:14.5px;color:var(--ink-2)}
+.show-pts svg{margin-top:2px;flex:none}
+.show-ticks{display:flex;gap:8px}
+.show-tick{display:block}
+.show-tick span{display:block;width:40px;height:2px;background:var(--line-2)}
+.show-tick:first-child span{background:var(--clay);width:60px}
+
+/* certification */
+.cred{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cred-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:80px;align-items:center}
+.cred-list{list-style:none;margin:36px 0 0;padding:0;display:flex;flex-direction:column;gap:20px}
+.cred-list li{display:flex;gap:15px}
+.cred-list li>span{width:40px;height:40px;border-radius:11px;background:var(--gold-tint);display:grid;place-items:center;flex:none}
+.cred-list b{display:block;font-size:15px;margin-bottom:3px}
+.cred-list div{font-size:14px;color:var(--ink-2);line-height:1.6}
+.cert{background:var(--paper);border:1px solid var(--line-2);border-radius:20px;padding:34px 34px 28px;box-shadow:var(--sh-3);position:relative;overflow:hidden}
+.cert::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 80% 0%,rgba(201,154,92,.14),transparent 70%);pointer-events:none}
+.cert-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.cert-tag{font-family:var(--word);font-weight:200;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.cert-seal{width:60px;height:60px;border-radius:999px;background:var(--gold-tint);display:grid;place-items:center;margin:28px 0 20px;box-shadow:0 0 0 1px rgba(201,154,92,.3)}
+.cert-name{font-size:34px;letter-spacing:-.02em;margin-bottom:8px}
+.cert-who{font-size:14px;color:var(--ink-2)}
+.cert-who b{color:var(--ink)}
+.cert-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0 22px;padding-top:22px;border-top:1px solid var(--line)}
+.cert-meta i{display:block;font-style:normal;font-family:var(--word);font-weight:200;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px}
+.cert-meta b{font-size:13px;font-weight:600}
+.cert-foot{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-3)}
+
+/* join */
+.join{text-align:center;overflow:hidden;padding:150px 40px}
+.join-glow{position:absolute;left:50%;top:0;transform:translateX(-50%);width:1100px;height:700px;background:radial-gradient(40% 45% at 50% 30%,rgba(140,26,26,.34),transparent 70%);pointer-events:none}
+.join-in{position:relative;max-width:760px;margin:0 auto}
+.join-h2{font-size:clamp(36px,5vw,66px);margin:16px 0 20px;letter-spacing:-.025em}
+.join-lede{margin:0 auto 36px}
+
+/* footer */
+.foot{border-top:1px solid var(--line);padding:70px 40px 30px;background:var(--paper)}
+.foot-in{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:48px}
+.foot-brand p{margin:16px 0 0;font-size:13.5px;line-height:1.65;color:var(--ink-3);max-width:30ch}
+.foot-col{display:flex;flex-direction:column;gap:11px}
+.foot-t{font-family:var(--word);font-weight:200;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px}
+.foot-col a{font-size:14px;color:var(--ink-2)}
+.foot-col a:hover{color:var(--clay-deep)}
+.foot-legal{max-width:1200px;margin:56px auto 0;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-3)}
+.foot-legal-links{display:flex;gap:20px}
+.foot-legal a{color:var(--ink-3)}
+
+/* ── scroll-driven motion (compositor timelines) ───────────────── */
+@supports (animation-timeline:view()){
+@keyframes rvIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.rv{animation:rvIn 1s linear both;animation-timeline:view();animation-range:entry 4% cover 24%}
+.how-card:nth-child(2){animation-range:entry 4% cover 30%}
+.how-card:nth-child(3){animation-range:entry 4% cover 36%}
+.cert-wrap{animation-range:entry 4% cover 32%}
+@keyframes navSolid{from{background:rgba(17,17,17,0);backdrop-filter:blur(0px);border-bottom-color:transparent}to{background:rgba(17,17,17,.82);backdrop-filter:blur(18px);border-bottom-color:var(--line)}}
+.nav{animation:navSolid 1s linear both;animation-timeline:scroll(root);animation-range:0 90px}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.nav-bar{animation:grow 1s linear both;animation-timeline:scroll(root)}
+@keyframes heroDev{to{transform:translateY(-92px)}}
+@keyframes heroGlow{to{transform:translateY(-60px)}}
+.hero-device{animation:heroDev 1s linear both;animation-timeline:scroll(root);animation-range:0 900px}
+.hero-glow{animation:heroGlow 1s linear both;animation-timeline:scroll(root);animation-range:0 900px}
+.lp{timeline-scope:--s1, --s2, --s3, --s4}
+.show-step:nth-child(1){view-timeline-name:--s1}
+.show-step:nth-child(2){view-timeline-name:--s2}
+.show-step:nth-child(3){view-timeline-name:--s3}
+.show-step:nth-child(4){view-timeline-name:--s4}
+@keyframes swap{0%,16%{opacity:0;transform:translateY(42px) scale(.97)}38%,62%{opacity:1;transform:none}84%,100%{opacity:0;transform:translateY(-42px) scale(.97)}}
+@keyframes swapFirst{0%,62%{opacity:1;transform:none}84%,100%{opacity:0;transform:translateY(-42px) scale(.97)}}
+@keyframes swapLast{0%,16%{opacity:0;transform:translateY(42px) scale(.97)}38%,100%{opacity:1;transform:none}}
+@keyframes stepCopy{0%,10%{opacity:0;transform:translateY(26px)}34%,66%{opacity:1;transform:none}90%,100%{opacity:0;transform:translateY(-26px)}}
+@keyframes tk{0%,16%{background:var(--line-2);width:40px}38%,62%{background:var(--clay);width:60px}84%,100%{background:var(--line-2);width:40px}}
+@keyframes tkFirst{0%,62%{background:var(--clay);width:60px}84%,100%{background:var(--line-2);width:40px}}
+@keyframes tkLast{0%,16%{background:var(--line-2);width:40px}38%,100%{background:var(--clay);width:60px}}
+.show-frame,.show-tick span{animation-duration:1s;animation-timing-function:linear;animation-fill-mode:both;animation-range:cover 0% cover 100%}
+.show-step{animation:stepCopy 1s linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+.show-frame-1{animation-name:swapFirst;animation-timeline:--s1}
+.show-frame-2{animation-name:swap;animation-timeline:--s2}
+.show-frame-3{animation-name:swap;animation-timeline:--s3}
+.show-frame-4{animation-name:swapLast;animation-timeline:--s4}
+.show-tick:nth-child(1) span{animation-name:tkFirst;animation-timeline:--s1}
+.show-tick:nth-child(2) span{animation-name:tk;animation-timeline:--s2}
+.show-tick:nth-child(3) span{animation-name:tk;animation-timeline:--s3}
+.show-tick:nth-child(4) span{animation-name:tkLast;animation-timeline:--s4}
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@media (max-width:1080px){
+  /* The nav is fixed, so anything that pins itself has to clear it. */
+  :root{--nav-h:76px}
+  .hero-in,.cred-in{grid-template-columns:1fr;gap:56px}
+  /* Parallax reads as depth beside the copy; once the hero stacks, the phone
+     is the last thing in the section and the lift just opens a hole under it. */
+  .hero-device{--ps:.74;animation:none;transform:none}
+  .hero-chip{display:none}
+  .show-in{display:block}
+  .show-step{animation:none;opacity:1;transform:none}
+  /* Solid behind everything the rail actually draws; the fade is confined to
+     the bottom padding, so copy scrolling under never crosses the ticks. */
+  .show-rail{position:sticky;top:var(--nav-h);height:auto;flex-direction:row;justify-content:flex-start;gap:24px;padding:14px 0 30px;background:linear-gradient(180deg,var(--paper) calc(100% - 30px),rgba(17,17,17,0));z-index:20}
+  /* flex:none — the rail is a row here, and without it the phone gets
+     shrunk narrower than the absolutely-positioned frames inside it. */
+  .show-device{--ps:.4;flex:none}
+  .show-ticks{align-items:center}
+  .show-tick{padding:12px 0}
+  .show-side{display:none}
+  .show-step{min-height:0;padding:44px 0 0}
+  .how-grid{grid-template-columns:1fr}
+  .foot-in{grid-template-columns:1fr 1fr;gap:36px}
+}
+@media (max-width:720px){
+  :root{--nav-h:78px}
+  .sec{padding-top:84px;padding-bottom:84px}
+  .sec,.hero,.join,.show-in{padding-left:22px;padding-right:22px}
+  .join{padding-top:104px;padding-bottom:104px}
+  .nav-in{padding:14px 22px;gap:16px}
+  .nav-links{display:none}
+  /* .nav-links carried the margin-left:auto that pushed the CTA right. */
+  .nav-cta{margin-left:auto;display:inline-flex;align-items:center;min-height:44px;padding:0 20px}
+  .hero{padding-top:126px;padding-bottom:56px}
+  .hero-h1{font-size:clamp(38px,10.6vw,46px)}
+  .hero-sub{font-size:16.5px;margin-bottom:28px}
+  .wl-row{flex-direction:column;gap:12px}
+  /* flex:1 resolves against the *column* axis here and collapsed the field
+     to zero height; the pill needs its own height back. */
+  .wl input{flex:none;width:100%;height:54px;font-size:16px}
+  .wl button{width:100%;justify-content:center}
+  .hero-device{--ps:.62}
+  .show-rail{flex-direction:column;align-items:center;gap:8px;padding-bottom:26px;background:linear-gradient(180deg,var(--paper) calc(100% - 26px),rgba(17,17,17,0))}
+  .show-device{--ps:.36}
+  .show-h2{font-size:clamp(26px,7.4vw,30px)}
+  .show-b{font-size:16px}
+  .how{padding-top:32px}
+  .how-grid{margin-top:44px}
+  .how-card{padding:32px 0 34px}
+  .cert{padding:24px 22px 22px}
+  .cert-top{gap:14px;align-items:flex-start}
+  .cert-tag{text-align:right}
+  .cert-name{font-size:28px}
+  .cert-meta{grid-template-columns:repeat(2,1fr);gap:16px 14px}
+  .foot-in{grid-template-columns:1fr;gap:34px}
+  .foot-col{gap:2px}
+  .foot-col a{padding:8px 0}
+  .foot,.foot-legal{padding-left:0;padding-right:0}
+  .foot{padding-left:22px;padding-right:22px}
+}
+/* Short viewports: the pinned phone must not eat the copy underneath it. */
+@media (max-width:720px) and (max-height:740px){
+  .show-device{--ps:.28}
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .hero-chip{animation:none}
+  .rv,.show-step,.show-frame,.show-tick span,.nav,.nav-bar,.hero-device,.hero-glow{animation:none!important;opacity:1;transform:none}
+  .show-frame:not(.show-frame-1){opacity:0}
+  .nav{background:rgba(17,17,17,.82);backdrop-filter:blur(18px);border-bottom-color:var(--line)}
+  .nav-bar{transform:scaleX(1)}
 }
