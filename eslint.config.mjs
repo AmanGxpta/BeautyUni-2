@@ -13,6 +13,13 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    // Email templates are rendered to a static HTML string by Resend, never by
+    // Next — <Image> emits markup no mail client can use, and there is no LCP
+    // to optimise in an inbox.
+    files: ["components/emails/**/*.tsx"],
+    rules: { "@next/next/no-img-element": "off" },
+  },
 ]);
 
 export default eslintConfig;

@@ -18,7 +18,8 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
  * Overridable so a dev without access to the verified domain can point at
  * `onboarding@resend.dev`; the default is the address we actually send from.
  */
-const FROM = process.env.RESEND_FROM ?? "Rockstar <support@naviteklabs.com>";
+const FROM =
+  process.env.RESEND_FROM ?? "Rockstar LMS <support@naviteklabs.com>";
 
 /**
  * Built lazily rather than at module scope: importing this file must not throw
@@ -52,7 +53,7 @@ export async function sendWaitlistConfirmation(email: string): Promise<void> {
       to: [email],
       subject: "You're on the Rockstar waitlist",
       react: WaitlistConfirmation({ siteUrl }),
-      text: waitlistConfirmationText(siteUrl),
+      text: waitlistConfirmationText(),
       headers: {
         // Repeat submits are de-duplicated before we reach this point, but a
         // retried request upstream shouldn't produce a second copy either.

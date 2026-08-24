@@ -5,6 +5,13 @@
  * every element, because Outlook ignores <style> blocks and most clients strip
  * flex/grid. The landing page's tokens are hard-coded here for the same reason
  * — CSS custom properties don't resolve in mail clients.
+ *
+ * The wordmark is a hosted PNG rather than the SVG the rest of the site uses
+ * (components/ui/logo.tsx, same artwork). Gmail, Outlook and most webmail drop
+ * SVG entirely, inline or as a data: URI, so the mark would simply be missing
+ * for the majority of recipients. It is served off our own origin, which means
+ * NEXT_PUBLIC_SITE_URL has to point at the real domain in production — on
+ * localhost the image resolves to nothing in a recipient's inbox.
  */
 const PAPER = "#111111";
 const SURFACE = "#1C1C1C";
@@ -16,11 +23,22 @@ const LINE = "#2E2C2A"; // --line flattened: rgba(240,237,232,.10) over --paper
 const SANS = "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
 const SERIF = "'Playfair Display', Georgia, 'Times New Roman', serif";
 
-const STEPS: Array<[string, string]> = [
-  ["Early access", "You're in the first group we open the app to, ahead of the public launch."],
-  ["Short lessons", "Practical technique broken into clips you can actually finish between clients."],
-  ["Real feedback", "Submit your work and get evaluated by professionals, not a quiz score."],
+const HEADLINE = "Thanks for being interested in Rockstar.";
+
+const BODY = [
+  "We\u2019re still building Rockstar, and we\u2019re taking the time to get the learning experience right before we open it up more widely.",
+  "You\u2019ve joined the list for early access. We\u2019ll email you as we get closer to launch and let you know when there\u2019s an opportunity to try it.",
 ];
+
+const STEPS_LEAD = "In the meantime, we\u2019re building around three things:";
+
+const STEPS: Array<[string, string]> = [
+  ["Learn", "Short, practical lessons designed for working beauty professionals."],
+  ["Practice", "Interactive learning that helps turn new knowledge into real skills."],
+  ["Progress", "Expert feedback and certifications that help you keep developing."],
+];
+
+const SIGN_OFF = "We\u2019ll keep you posted";
 
 export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
   return (
@@ -37,8 +55,8 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
             maxWidth: 0,
           }}
         >
-          You&rsquo;re on the Rockstar waitlist — we&rsquo;ll email you the moment your early
-          access is ready.
+          You&rsquo;re on the list for early access — we&rsquo;ll email you as we get closer
+          to launch.
         </div>
 
         <table
@@ -64,18 +82,13 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
                     {/* Wordmark */}
                     <tr>
                       <td style={{ paddingBottom: "28px" }}>
-                        <span
-                          style={{
-                            fontFamily: SANS,
-                            fontSize: "15px",
-                            fontWeight: 600,
-                            letterSpacing: "0.16em",
-                            textTransform: "uppercase",
-                            color: INK,
-                          }}
-                        >
-                          Rockstar
-                        </span>
+                        <img
+                          src={`${siteUrl}/email/rockstar-logo.png`}
+                          alt="Rockstar"
+                          width={150}
+                          height={55}
+                          style={{ display: "block", width: "150px", height: "55px", border: 0 }}
+                        />
                       </td>
                     </tr>
 
@@ -113,23 +126,23 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
                             color: INK,
                           }}
                         >
-                          Thanks for joining the Rockstar waitlist.
+                          {HEADLINE}
                         </h1>
 
-                        <p
-                          style={{
-                            margin: "0 0 26px",
-                            fontFamily: SANS,
-                            fontSize: "16px",
-                            lineHeight: 1.65,
-                            color: INK_2,
-                          }}
-                        >
-                          We&rsquo;re opening the app to a small group of beauty professionals
-                          first, so we can build the learning experience around real feedback.
-                          You&rsquo;ll hear from us at this address the moment your early access
-                          is ready — there&rsquo;s nothing else you need to do.
-                        </p>
+                        {BODY.map((para, i) => (
+                          <p
+                            key={para}
+                            style={{
+                              margin: i === BODY.length - 1 ? "0 0 26px" : "0 0 16px",
+                              fontFamily: SANS,
+                              fontSize: "16px",
+                              lineHeight: 1.65,
+                              color: INK_2,
+                            }}
+                          >
+                            {para}
+                          </p>
+                        ))}
 
                         <table
                           role="presentation"
@@ -140,6 +153,22 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
                           style={{ borderTop: `1px solid ${LINE}`, paddingTop: "6px" }}
                         >
                           <tbody>
+                            <tr>
+                              <td style={{ paddingTop: "24px" }}>
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontFamily: SANS,
+                                    fontSize: "15.5px",
+                                    fontWeight: 600,
+                                    lineHeight: 1.5,
+                                    color: INK,
+                                  }}
+                                >
+                                  {STEPS_LEAD}
+                                </p>
+                              </td>
+                            </tr>
                             {STEPS.map(([title, body]) => (
                               <tr key={title}>
                                 <td style={{ paddingTop: "22px" }}>
@@ -171,6 +200,10 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
                           </tbody>
                         </table>
 
+                        {/* Deliberately not a link: this is a status pill, not
+                            a call to action — there is nothing to click yet.
+                            Rendered as a <span> so no client turns it into
+                            one, and so it reads as text to a screen reader. */}
                         <table
                           role="presentation"
                           cellPadding={0}
@@ -186,8 +219,7 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
                                   borderRadius: "999px",
                                 }}
                               >
-                                <a
-                                  href={siteUrl}
+                                <span
                                   style={{
                                     display: "inline-block",
                                     padding: "13px 26px",
@@ -195,11 +227,10 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
                                     fontSize: "15px",
                                     fontWeight: 600,
                                     color: INK,
-                                    textDecoration: "none",
                                   }}
                                 >
-                                  See what we&rsquo;re building
-                                </a>
+                                  {SIGN_OFF}
+                                </span>
                               </td>
                             </tr>
                           </tbody>
@@ -210,21 +241,6 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
                     {/* Footer */}
                     <tr>
                       <td style={{ padding: "26px 6px 0" }}>
-                        <p
-                          style={{
-                            margin: "0 0 6px",
-                            fontFamily: SANS,
-                            fontSize: "13px",
-                            lineHeight: 1.6,
-                            color: INK_3,
-                          }}
-                        >
-                          You&rsquo;re getting this because you joined the waitlist at{" "}
-                          <a href={siteUrl} style={{ color: INK_3 }}>
-                            {siteUrl.replace(/^https?:\/\//, "")}
-                          </a>
-                          . We only email about Rockstar.
-                        </p>
                         <p
                           style={{
                             margin: 0,
@@ -250,23 +266,20 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
 }
 
 /** Plain-text alternative — sent alongside the HTML part. */
-export function waitlistConfirmationText(siteUrl: string): string {
+export function waitlistConfirmationText(): string {
   return [
     "You're on the list.",
     "",
-    "Thanks for joining the Rockstar waitlist.",
+    HEADLINE,
     "",
-    "We're opening the app to a small group of beauty professionals first, so we",
-    "can build the learning experience around real feedback. You'll hear from us",
-    "at this address the moment your early access is ready — there's nothing else",
-    "you need to do.",
+    ...BODY.flatMap((para) => [para, ""]),
+    STEPS_LEAD,
     "",
-    ...STEPS.flatMap(([title, body]) => [`* ${title} — ${body}`]),
+    ...STEPS.map(([title, body]) => `* ${title} — ${body}`),
     "",
-    `See what we're building: ${siteUrl}`,
+    `${SIGN_OFF}.`,
     "",
     "—",
-    `You're getting this because you joined the waitlist at ${siteUrl}.`,
     "Questions? Just reply to this email.",
   ].join("\n");
 }
