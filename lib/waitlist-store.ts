@@ -10,10 +10,8 @@ import type { WaitlistAnswers, WaitlistSource } from "./waitlist";
 
 export type WaitlistSignup = {
   name: string;
-  /** E.164 dialling code with its `+`, e.g. `+91`. */
-  phoneCountryCode: string;
-  /** National number, digits only. */
-  phone: string;
+  /** The whole number in E.164, e.g. `+919876543210`. */
+  phoneNumber: string;
   email: string;
   answers: WaitlistAnswers;
   source: WaitlistSource;
@@ -34,8 +32,7 @@ export async function saveWaitlistSignup(
     data: [
       {
         name: signup.name,
-        phoneCountryCode: signup.phoneCountryCode,
-        phone: signup.phone,
+        phoneNumber: signup.phoneNumber,
         email: signup.email,
         source: signup.source,
         createdAt: signup.createdAt,
@@ -56,8 +53,7 @@ export async function saveWaitlistSignup(
     where: { email: signup.email },
     data: {
       name: signup.name,
-      phoneCountryCode: signup.phoneCountryCode,
-      phone: signup.phone,
+      phoneNumber: signup.phoneNumber,
       ...signup.answers,
     },
   });

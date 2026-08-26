@@ -221,8 +221,10 @@ export async function joinWaitlist(input: {
 
   const signup: WaitlistSignup = {
     name,
-    phoneCountryCode: country.dial,
-    phone,
+    // Joined here rather than kept apart: the two controls are a form
+    // affordance, and the row wants one dialable number. Both halves are
+    // already normalized, so this concatenation *is* E.164.
+    phoneNumber: country.dial + phone,
     email,
     answers,
     source: input.source ?? "api",

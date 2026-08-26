@@ -33,13 +33,15 @@ model WaitlistSignup {
   email String  @unique
   name  String?
 
-  /// E.164 country calling code with its `+`, e.g. `+91`. Split from `phone`
-  /// rather than folded into it: the form asks for the two separately, and a
-  /// single combined string would have to be re-parsed to get either back —
-  /// ambiguously, since +1 spans two dozen countries.
-  phoneCountryCode String? @map("phone_country_code")
-  /// The national number, digits only — no spaces, dashes or leading zero.
-  phone            String?
+  /// The whole number in E.164, e.g. `+919876543210` — dialling code, national
+  /// number, no separators.
+  ///
+  /// The form still asks for the code and the number as two controls, because
+  /// picking a country beats typing `+971`; they are joined on the way in. One
+  /// column is what anyone reading or exporting this table actually wants, and
+  /// it costs only the ability to say *which* country a shared code like +1
+  /// belonged to — which is not something we ask for or report on.
+  phoneNumber String? @map("phone_number")
 
   /// Q4 — "Did we solve any of your challenges?"
   solvedChallenges     Boolean? @map("solved_challenges")
