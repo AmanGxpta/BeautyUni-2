@@ -227,9 +227,16 @@ body{margin:0;background:var(--paper);color:var(--ink)}
 .cd-opt input:checked+span{background:var(--clay);color:#F0EDE8;box-shadow:none}
 .cd-opt input:focus-visible+span{box-shadow:0 0 0 2px var(--clay)}
 
-/* Sticky so a ten-question form never hides its own submit. */
-.cd-foot{position:sticky;bottom:0;z-index:1;display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:2px;padding:18px 0 24px;background:var(--surface);border-top:1px solid var(--line)}
-.cd-fine{flex:1;min-width:190px;margin:0;font-size:12.5px;line-height:1.5;color:var(--ink-3)}
+/* Sticky so a ten-question form never hides its own submit. Back and Submit
+   share one row pushed to opposite ends — the destructive-ish exit and the
+   commit shouldn't sit next to each other where a thumb can confuse them —
+   and the reassurance goes underneath, centred, belonging to both. */
+.cd-foot{position:sticky;bottom:0;z-index:1;display:flex;flex-direction:column;gap:14px;margin-top:2px;padding:18px 0 24px;background:var(--surface);border-top:1px solid var(--line)}
+.cd-foot-actions{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.cd-back{height:52px;padding:0 28px;border:none;border-radius:999px;background:transparent;box-shadow:inset 0 0 0 1.5px var(--line-2);color:var(--ink);font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;display:inline-flex;align-items:center;gap:10px;white-space:nowrap;transition:background .2s,box-shadow .2s}
+.cd-back:hover{background:var(--paper-2);box-shadow:inset 0 0 0 1.5px var(--line-3)}
+.cd-fine{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;font-size:12.5px;line-height:1.5;color:var(--ink-3);text-align:center}
+.cd-fine svg{flex:none}
 .cd-submit{height:52px;padding:0 30px;border:none;border-radius:999px;background:var(--clay);color:#F0EDE8;font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;display:inline-flex;align-items:center;gap:10px;white-space:nowrap;transition:background .2s,transform .2s}
 .cd-submit:hover{background:var(--clay-hover);transform:translateY(-1px)}
 .cd-submit[disabled]{opacity:.62;cursor:progress;transform:none}
@@ -408,7 +415,9 @@ body{margin:0;background:var(--paper);color:var(--ink)}
   .cd-opt span{min-width:0;flex:1}
   .cd-yesno .cd-opt{flex:1}
   .cd-foot{padding-bottom:calc(22px + env(safe-area-inset-bottom))}
-  .cd-submit{width:100%;justify-content:center}
+  .cd-foot-actions{gap:10px}
+  .cd-foot-actions .cd-back,.cd-foot-actions .cd-submit{flex:1;min-width:0;padding:0 18px;justify-content:center}
+  .cd-panel-done .cd-submit{width:100%;justify-content:center}
   .cd-panel-done{padding:44px 22px 34px}
   .hero-device{--ps:.62}
   .show-rail{flex-direction:column;align-items:center;gap:8px;padding-bottom:26px;background:linear-gradient(180deg,var(--paper) calc(100% - 26px),rgba(17,17,17,0))}

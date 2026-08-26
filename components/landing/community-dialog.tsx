@@ -410,22 +410,13 @@ function CommunityForm({
           }}
         />
 
-        <div
-          className="cd-foot"
-          style={{ display: "flex", flexDirection: "column", gap: 12 }}
-        >
-          <div
-            className="cd-foot-row"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "stretch",
-              gap: 12,
-            }}
-          >
-            <p className="cd-fine" style={{ margin: 0 }}>
-              We&rsquo;ll only use your details to reach you about Rockstar.
-            </p>
+        <div className="cd-foot">
+          <div className="cd-foot-actions">
+            {/* A second way out at the foot of a long form — the ✕ is ten
+                questions back up the scroll by the time you reach here. */}
+            <button type="button" className="cd-back" onClick={onClose}>
+              <Icon name="arrowL" size={17} /> Back
+            </button>
             <button type="submit" className="cd-submit" disabled={pending}>
               {pending ? (
                 "Sending…"
@@ -436,21 +427,10 @@ function CommunityForm({
               )}
             </button>
           </div>
-          <style>{`
-            @media (min-width: 600px) {
-              .cd-foot-row {
-                flex-direction: row !important;
-                align-items: center !important;
-                justify-content: flex-start;
-              }
-              .cd-foot-row .cd-fine {
-                flex: 1 1 auto;
-              }
-              .cd-foot-row .cd-submit {
-                margin-left: 16px;
-              }
-            }
-          `}</style>
+          <p className="cd-fine">
+            <Icon name="lock" size={14} c="var(--clay-deep)" />
+            We&rsquo;ll only use your details to reach you about Rockstar.
+          </p>
         </div>
       </form>
     </div>
