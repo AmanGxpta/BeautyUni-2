@@ -12,21 +12,57 @@ datasource db {
   provider = "postgresql"
 }
 
-/// One row per person on the waitlist.
+/// One row per person who joins the RS Community.
 ///
-/// `email` is unique so a repeat signup is a no-op rather than a duplicate
-/// row — `joinWaitlist` reports it back as `alreadyOnList`. Addresses are
+/// `email` is unique so a repeat submission updates the same person rather
+/// than making a second row — `joinWaitlist` reports it back as
+/// `alreadyOnList` and skips a second confirmation email. Addresses are
 /// normalized (trimmed + lowercased) before they get here, so the unique
 /// index is doing real work rather than letting case variants through.
 ///
 /// `source` stays a plain string rather than a Postgres enum: it records
-/// which CTA the signup came from, and a new CTA should not need a migration
-/// before it can start collecting.
+/// which CTA opened the join dialog, and a new CTA should not need a
+/// migration before it can start collecting.
+///
+/// Every field below `phone` is post-seminar feedback. The form requires all
+/// of them, but the columns stay nullable for the rows written before the
+/// feedback form existed — a NOT NULL here would either reject that history
+/// or need a made-up answer backfilled into it.
 model WaitlistSignup {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id    String  @id @default(cuid())
+  email String  @unique
+  name  String?
+
+  /// E.164 country calling code with its `+`, e.g. `+91`. Split from `phone`
+  /// rather than folded into it: the form asks for the two separately, and a
+  /// single combined string would have to be re-parsed to get either back —
+  /// ambiguously, since +1 spans two dozen countries.
+  phoneCountryCode String? @map("phone_country_code")
+  /// The national number, digits only — no spaces, dashes or leading zero.
+  phone            String?
+
+  /// Q4 — "Did we solve any of your challenges?"
+  solvedChallenges     Boolean? @map("solved_challenges")
+  /// Q5 — "Did you love the Rockstar leaders growth seminar?"
+  lovedSeminar         Boolean? @map("loved_seminar")
+  /// Q6 — "What was your No. 1 takeaway?"
+  topTakeaway          String?  @map("top_takeaway")
+  /// Q7 — "What would you implement in your salon tomorrow?"
+  implementTomorrow    String?  @map("implement_tomorrow")
+  /// Q8 — "Will this change how you communicate with your team?"
+  changesTeamComms     Boolean? @map("changes_team_comms")
+  /// Q9 — "Would the Rockstar way of communication help you deliver the
+  /// perfect guest experience?"
+  helpsGuestExperience Boolean? @map("helps_guest_experience")
+  /// Q10 — "Anything we could add to our journey of education in India?"
+  educationIdeas       String?  @map("education_ideas")
+
   source    String   @default("api")
   createdAt DateTime @default(now()) @map("created_at")
+  /// Moves when someone re-submits the form. Without it a revised answer is
+  /// indistinguishable from the original signup, and the answers are now the
+  /// point of the row.
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@index([createdAt])
   @@map("waitlist_signups")

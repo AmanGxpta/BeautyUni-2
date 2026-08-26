@@ -132,7 +132,7 @@ body{margin:0;background:var(--paper);color:var(--ink)}
 .nav-links{display:flex;gap:30px;margin-left:auto}
 .nav-links a{font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2)}
 .nav-links a:hover{color:var(--ink)}
-.nav-cta{background:var(--clay);color:#F0EDE8!important;font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:12px 22px;border-radius:999px;white-space:nowrap;transition:background .2s}
+.nav-cta{border:0;cursor:pointer;line-height:1.2;background:var(--clay);color:#F0EDE8!important;font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:12px 22px;border-radius:999px;white-space:nowrap;transition:background .2s}
 .nav-cta:hover{background:var(--clay-hover,#A82020)}
 .nav-bar{height:2px;background:var(--clay);transform-origin:0 50%;transform:scaleX(0)}
 
@@ -167,24 +167,83 @@ body{margin:0;background:var(--paper);color:var(--ink)}
 .hero-chip i{display:block;font-style:normal;font-size:12px;color:var(--ink-3);margin-top:2px}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 
-/* waitlist */
-.wl-row{display:flex;gap:10px;max-width:470px}
-.wl input{flex:1;min-width:0;height:56px;border-radius:999px;border:none;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line-2);color:var(--ink);font-family:var(--ui);font-size:15.5px;padding:0 22px;outline:none;transition:box-shadow .2s}
-.wl input::placeholder{color:var(--ink-3)}
-.wl input:focus{box-shadow:inset 0 0 0 2px var(--clay)}
-.wl button{height:56px;padding:0 28px;border:none;border-radius:999px;background:var(--clay);color:#F0EDE8;font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;display:inline-flex;align-items:center;gap:10px;white-space:nowrap;transition:background .2s,transform .2s}
-.wl button:hover{background:#A82020;transform:translateY(-1px)}
-.wl button[disabled]{opacity:.62;cursor:progress;transform:none}
-.wl-note{margin:14px 0 0;font-weight:300;font-size:13px;color:var(--ink-3);max-width:44ch}
-.wl-err{margin:12px 0 0;font-size:13px;font-weight:600;color:var(--clay-deep);max-width:44ch}
-.wl.big .wl-row{margin:0 auto}
-.wl.big .wl-note,.wl.big .wl-err{margin-left:auto;margin-right:auto;text-align:center}
-.wl.big .wl-note{margin-top:16px}
-.wl-done{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line-2);border-radius:20px;padding:18px 22px;max-width:470px}
-.wl-done.big{margin:0 auto}
-.wl-tick{width:34px;height:34px;border-radius:999px;background:var(--clay);display:grid;place-items:center;flex:none}
-.wl-done-t{font-weight:700;font-size:15px}
-.wl-done-b{font-size:13px;color:var(--ink-2);margin-top:2px}
+/* The page CTA — every one of these opens the RS Community dialog, which is
+   where the email is now collected, so there is no on-page field any more. */
+.wl-cta{height:56px;padding:0 30px;border:none;border-radius:999px;background:var(--clay);color:#F0EDE8;font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;display:inline-flex;align-items:center;gap:10px;white-space:nowrap;transition:background .2s,transform .2s}
+.wl-cta:hover{background:var(--clay-hover);transform:translateY(-1px)}
+.wl-cta-big{height:62px;padding:0 36px;font-size:12px}
+
+/* RS Community dialog — the ten-question join + seminar feedback form.
+   A native <dialog>: the top layer, the focus trap, Esc-to-close and the
+   backdrop are all the platform's, so none of them are re-implemented here. */
+.cd{position:fixed;inset:0;width:100%;max-width:none;height:100%;max-height:none;margin:0;padding:24px;border:0;background:transparent;color:var(--ink);overflow:auto;overscroll-behavior:contain}
+/* Only [open] gets a display, or the UA's `dialog:not([open]){display:none}`
+   is overridden and the panel sits on the page while closed. */
+.cd[open]{display:flex}
+.cd::backdrop{background:rgba(6,6,6,.74);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);animation:cdFade .28s ease both}
+/* margin:auto rather than centring on the flex container: when the panel is
+   taller than the viewport, centring would cut its top off past the scroll. */
+.cd-panel{position:relative;width:100%;max-width:620px;margin:auto;display:flex;flex-direction:column;max-height:calc(100dvh - 48px);background:var(--surface);border:1px solid var(--line-2);border-radius:22px;box-shadow:var(--sh-3);overflow:hidden;animation:cdRise .34s cubic-bezier(.2,.8,.25,1) both}
+.cd-head{flex:none;display:flex;align-items:flex-start;gap:16px;padding:28px 30px 20px;border-bottom:1px solid var(--line)}
+.cd-h{font-size:29px;margin:12px 0 10px;letter-spacing:-.02em}
+.cd-lede{margin:0;font-size:14.5px;line-height:1.6;color:var(--ink-2);max-width:46ch}
+.cd-x{flex:none;margin-left:auto;width:36px;height:36px;border:0;border-radius:999px;background:var(--paper-2);display:grid;place-items:center;cursor:pointer;transition:background .2s}
+.cd-x:hover{background:var(--paper-3)}
+
+.cd-form{display:flex;flex-direction:column;gap:22px;padding:24px 30px 0;overflow-y:auto}
+/* Both the browser's own scroll-to-invalid-field and the error effect in
+   community-dialog.tsx land a question in view; the bottom margin keeps the
+   sticky footer from being what they land it behind. */
+.cd-q{display:flex;flex-direction:column;scroll-margin:20px 0 104px}
+.cd-fieldset{border:0;margin:0;padding:0;min-width:0}
+.cd-label{display:flex;align-items:baseline;gap:11px;width:100%;padding:0;margin:0 0 11px;font-size:14.5px;font-weight:600;line-height:1.5;color:var(--ink)}
+.cd-num{flex:none;font-family:var(--word);font-weight:200;font-size:10px;letter-spacing:.18em;color:var(--clay-deep)}
+.cd-optional{flex:none;margin-left:auto;padding-left:10px;font-family:var(--word);font-weight:200;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.cd-q input,.cd-q textarea{width:100%;background:var(--paper);border:none;border-radius:12px;box-shadow:inset 0 0 0 1.5px var(--line-2);color:var(--ink);font-family:var(--ui);font-size:15.5px;line-height:1.5;padding:14px 16px;outline:none;transition:box-shadow .2s}
+.cd-q input::placeholder,.cd-q textarea::placeholder{color:var(--ink-3)}
+.cd-q input:focus,.cd-q textarea:focus{box-shadow:inset 0 0 0 2px var(--clay)}
+.cd-q textarea{resize:vertical;min-height:86px}
+/* Phone: the dial picker sizes to its content and the number takes the rest. */
+.cd-phone{display:flex;gap:10px}
+.cd-phone input{flex:1;min-width:0}
+/* A native <select> with `appearance:none` keeps the platform's picker while
+   taking the theme's chrome; the chevron is a background image because a
+   pseudo-element can't be painted on a replaced element. */
+.cd-dial{flex:none;width:108px;-webkit-appearance:none;appearance:none;background:var(--paper) no-repeat right 14px center/12px 12px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23777370' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M5 9l7 7 7-7'/%3E%3C/svg%3E");border:none;border-radius:12px;box-shadow:inset 0 0 0 1.5px var(--line-2);color:var(--ink);font-family:var(--ui);font-size:15.5px;line-height:1.5;padding:14px 34px 14px 14px;outline:none;cursor:pointer;transition:box-shadow .2s}
+.cd-dial:focus{box-shadow:inset 0 0 0 2px var(--clay)}
+/* The open list is drawn by the OS, which does not inherit the dark theme —
+   without this the options come back as black-on-white on some platforms. */
+.cd-dial option{background:var(--surface);color:var(--ink)}
+.cd-q-bad .cd-dial{box-shadow:inset 0 0 0 1.5px var(--clay-deep)}
+.cd-q-bad input,.cd-q-bad textarea{box-shadow:inset 0 0 0 1.5px var(--clay-deep)}
+.cd-err{margin:9px 0 0;font-size:13px;font-weight:600;color:var(--clay-deep)}
+
+/* Yes/No: real radios, made invisible over the pill they check. */
+.cd-yesno{display:flex;gap:10px}
+.cd-opt{position:relative;display:inline-flex}
+.cd-opt input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.cd-opt span{display:inline-flex;align-items:center;justify-content:center;min-width:96px;height:44px;padding:0 20px;border-radius:999px;background:var(--paper);box-shadow:inset 0 0 0 1.5px var(--line-2);font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);transition:background .2s,color .2s,box-shadow .2s}
+.cd-opt:hover span{color:var(--ink)}
+.cd-opt input:checked+span{background:var(--clay);color:#F0EDE8;box-shadow:none}
+.cd-opt input:focus-visible+span{box-shadow:0 0 0 2px var(--clay)}
+
+/* Sticky so a ten-question form never hides its own submit. */
+.cd-foot{position:sticky;bottom:0;z-index:1;display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:2px;padding:18px 0 24px;background:var(--surface);border-top:1px solid var(--line)}
+.cd-fine{flex:1;min-width:190px;margin:0;font-size:12.5px;line-height:1.5;color:var(--ink-3)}
+.cd-submit{height:52px;padding:0 30px;border:none;border-radius:999px;background:var(--clay);color:#F0EDE8;font-family:var(--word);font-weight:200;font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;display:inline-flex;align-items:center;gap:10px;white-space:nowrap;transition:background .2s,transform .2s}
+.cd-submit:hover{background:var(--clay-hover);transform:translateY(-1px)}
+.cd-submit[disabled]{opacity:.62;cursor:progress;transform:none}
+
+/* `justify-content` only bites on mobile, where the panel is a full-height
+   sheet and this short success state would otherwise sit at the very top. */
+.cd-panel-done{justify-content:center;padding:46px 34px 38px;text-align:center}
+.cd-done-tick{width:56px;height:56px;border-radius:999px;background:var(--clay);display:grid;place-items:center;margin:0 auto}
+.cd-done-h{font-size:34px;margin:20px 0 10px}
+.cd-done-b{margin:0 auto 26px;font-size:15.5px;line-height:1.65;color:var(--ink-2);max-width:40ch}
+.cd-panel-done .cd-submit{align-self:center}
+
+@keyframes cdFade{from{opacity:0}to{opacity:1}}
+@keyframes cdRise{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
 
 /* how */
 .how{padding-top:40px}
@@ -338,11 +397,19 @@ body{margin:0;background:var(--paper);color:var(--ink)}
   .hero{padding-top:126px;padding-bottom:56px}
   .hero-h1{font-size:clamp(38px,10.6vw,46px)}
   .hero-sub{font-size:16.5px;margin-bottom:28px}
-  .wl-row{flex-direction:column;gap:12px}
-  /* flex:1 resolves against the *column* axis here and collapsed the field
-     to zero height; the pill needs its own height back. */
-  .wl input{flex:none;width:100%;height:54px;font-size:16px}
-  .wl button{width:100%;justify-content:center}
+  .wl-cta{width:100%;justify-content:center}
+  .cd{padding:0}
+  .cd-panel{max-width:none;max-height:100dvh;min-height:100dvh;border:0;border-radius:0}
+  .cd-head{padding:22px 22px 18px}
+  .cd-h{font-size:25px}
+  .cd-form{padding:20px 22px 0}
+  .cd-q input,.cd-q textarea,.cd-dial{font-size:16px}
+  .cd-dial{width:100px}
+  .cd-opt span{min-width:0;flex:1}
+  .cd-yesno .cd-opt{flex:1}
+  .cd-foot{padding-bottom:calc(22px + env(safe-area-inset-bottom))}
+  .cd-submit{width:100%;justify-content:center}
+  .cd-panel-done{padding:44px 22px 34px}
   .hero-device{--ps:.62}
   .show-rail{flex-direction:column;align-items:center;gap:8px;padding-bottom:26px;background:linear-gradient(180deg,var(--paper) calc(100% - 26px),rgba(17,17,17,0))}
   .show-device{--ps:.36}
@@ -370,6 +437,7 @@ body{margin:0;background:var(--paper);color:var(--ink)}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .hero-chip{animation:none}
+  .cd-panel,.cd::backdrop{animation:none}
   .rv,.show-step,.show-frame,.show-tick span,.nav,.nav-bar,.hero-device,.hero-glow{animation:none!important;opacity:1;transform:none}
   .show-frame:not(.show-frame-1){opacity:0}
   .nav{background:rgba(17,17,17,.82);backdrop-filter:blur(18px);border-bottom-color:var(--line)}

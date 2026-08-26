@@ -2,7 +2,7 @@ import { Icon } from "@/components/ui/icon";
 import { Avatar } from "@/components/ui/primitives";
 import { ScreenFeed } from "@/components/screens/feed";
 import { Phone } from "./phone";
-import { WaitlistForm } from "./waitlist-form";
+import { CommunityCta } from "./community-dialog";
 
 const FACES = ["Rae Mills", "Jordan Lee", "Sam Rivera", "Ana Duarte"];
 
@@ -23,7 +23,9 @@ export function Hero() {
             lessons with expert feedback, hands-on evaluation, and
             certifications you can build on
           </p>
-          <WaitlistForm source="hero" />
+          <CommunityCta className="wl-cta" source="hero">
+            Join the RS Community <Icon name="chevR" size={17} />
+          </CommunityCta>
           <div className="hero-trust">
             <div className="hero-faces">
               {FACES.map((n) => (

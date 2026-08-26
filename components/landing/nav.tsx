@@ -1,4 +1,5 @@
 import { RSLogo } from "@/components/ui/logo";
+import { CommunityCta } from "./community-dialog";
 
 export function Nav() {
   return (
@@ -12,9 +13,9 @@ export function Nav() {
           <a href="#inside">Inside the app</a>
           <a href="#credential">Certification</a>
         </nav>
-        <a className="nav-cta" href="#join">
-          Join the waitlist
-        </a>
+        <CommunityCta className="nav-cta" source="nav">
+          Join the RS Community
+        </CommunityCta>
       </div>
       <div className="nav-bar" />
     </header>

@@ -24,10 +24,9 @@ const raleway = Raleway({
   display: "swap",
 });
 
-
 const title = "Rockstar — Learn the craft in thirty seconds";
 const description =
-  "A pocket-sized apprenticeship for stylists. Watch a clip, answer one quick check, send up your own work and get notes back from a real educator. Join the waitlist.";
+  "A pocket-sized apprenticeship for stylists. Watch a clip, answer one quick check, send up your own work and get notes back from a real educator. Join the RS Community.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
