@@ -1,5 +1,14 @@
 import { after } from "next/server";
 import { sendWaitlistConfirmation } from "./email";
+import {
+  isValidEmail,
+  isValidPhone,
+  MAX_NAME_LENGTH,
+  normalizeEmail,
+  normalizePhone,
+  normalizeText,
+  parseYesNo,
+} from "./contact";
 import { findCountry, type Country } from "./countries";
 import { saveWaitlistSignup, type WaitlistSignup } from "./waitlist-store";
 
@@ -10,10 +19,6 @@ export type WaitlistResult =
   | { ok: true; email: string; alreadyOnList: boolean }
   | { ok: false; field: WaitlistField; error: string };
 
-const MAX_EMAIL_LENGTH = 254; // RFC 5321
-const EMAIL_RE = /^[^\s@]+@[^\s@,]+\.[^\s@,.]{2,}$/;
-
-const MAX_NAME_LENGTH = 120;
 /** Roomy on purpose — this is feedback prose, and a cap that bites is a lost answer. */
 const MAX_ANSWER_LENGTH = 2000;
 
@@ -90,57 +95,8 @@ const MISSING_ANSWER: Record<keyof WaitlistAnswers, string> = {
   educationIdeas: "Tell us what we could add — a line is plenty.",
 };
 
-export function normalizeEmail(raw: unknown): string {
-  return typeof raw === "string" ? raw.trim().toLowerCase() : "";
-}
-
-export function isValidEmail(email: string): boolean {
-  return email.length > 0 && email.length <= MAX_EMAIL_LENGTH && EMAIL_RE.test(email);
-}
-
 export function isWaitlistSource(v: unknown): v is WaitlistSource {
   return v === "hero" || v === "join" || v === "nav" || v === "api";
-}
-
-function normalizeText(raw: unknown): string {
-  return typeof raw === "string" ? raw.trim() : "";
-}
-
-/**
- * The national number, reduced to digits.
- *
- * The country is a separate field now, so this half no longer has to guess at
- * a country prefix — it only has to survive the ways people type a number they
- * consider local: `98765 43210`, `098765-43210`, `(98765) 43210`. Everything
- * that isn't a digit is punctuation, and a single leading zero is the trunk
- * prefix that E.164 drops.
- */
-const MIN_PHONE_DIGITS = 6;
-/** 15 is E.164's total; the country code has already taken some of it. */
-const MAX_PHONE_DIGITS = 14;
-
-export function normalizePhone(raw: unknown): string {
-  const digits = normalizeText(raw).replace(/\D/g, "");
-  return digits.startsWith("0") ? digits.replace(/^0+/, "") : digits;
-}
-
-export function isValidPhone(nationalNumber: string): boolean {
-  return (
-    nationalNumber.length >= MIN_PHONE_DIGITS && nationalNumber.length <= MAX_PHONE_DIGITS
-  );
-}
-
-/**
- * A yes/no answer, as it comes off a radio group.
- *
- * Anything that isn't "yes" or "no" — an unanswered question above all — is
- * `undefined` rather than `false`, so an unanswered question is rejected
- * rather than silently recorded as a "no".
- */
-export function parseYesNo(raw: unknown): boolean | undefined {
-  if (raw === "yes" || raw === true) return true;
-  if (raw === "no" || raw === false) return false;
-  return undefined;
 }
 
 /** Trimmed answer, or `undefined` when it was left blank — never an empty string. */

@@ -69,3 +69,72 @@ model WaitlistSignup {
   @@index([createdAt])
   @@map("waitlist_signups")
 }
+
+/// One row per person who answers the Rockstar 2-Day Seminar Feedback Survey
+/// at `/seminar-feedback`.
+///
+/// Its own table rather than more columns on `WaitlistSignup`: the two forms
+/// ask different questions of different people at different moments, and
+/// folding them together would give every waitlist row nine NULL survey
+/// answers and every response seven NULL waitlist answers. Keeping them apart
+/// also lets this table hold its required answers NOT NULL — something
+/// `WaitlistSignup` cannot do, because it has history that predates its own
+/// questions.
+///
+/// `email` is unique so a second submission revises the same response rather
+/// than making a second row; `recordSeminarFeedback` reports that back as
+/// `alreadyResponded` and skips a second confirmation email.
+///
+/// The scale answers are `String`, not a Postgres enum, and hold short stable
+/// slugs (`very_good`, `not_confident_yet`) rather than the labels shown on
+/// the page. The slug is the answer and the label is copy: rewording "Very
+/// good" must not split one rating across two spellings in the data, and
+/// adding a scale point should not need a migration before the survey can
+/// collect it. `lib/seminar-survey.ts` is the list of accepted values, and it
+/// is checked per question rather than across all of them.
+model SeminarFeedback {
+  id    String @id @default(cuid())
+  email String @unique
+  name  String
+
+  /// The whole number in E.164, e.g. `+919876543210` — dialling code,
+  /// national number, no separators. The form asks for the code and the
+  /// number as two controls; they are joined on the way in.
+  phoneNumber String @map("phone_number")
+
+  /// Q1 — overall experience across the two days. See `RATING_SCALE`.
+  overallRating    String @map("overall_rating")
+  /// Q2 — relevance to their role, salon, or business goals.
+  contentRelevance String @map("content_relevance")
+  /// Q3 — the session, speaker, topic, or activity with the greatest impact.
+  greatestImpact   String @map("greatest_impact")
+  /// Q4 — confidence about applying what they learned.
+  applyConfidence  String @map("apply_confidence")
+  /// Q5 — one action, change, or strategy for the next 30 days.
+  thirtyDayAction  String @map("thirty_day_action")
+  /// Q6 — the speakers and facilitators.
+  speakerRating    String @map("speaker_rating")
+  /// Q7 — the event: venue, timing, registration, hospitality, organisation.
+  eventRating      String @map("event_rating")
+
+  /// Q8 — what would make the next seminar more valuable. Optional: a
+  /// required "any suggestions?" collects "na", not suggestions.
+  improvementIdeas String?  @map("improvement_ideas")
+  /// Q9 — a short testimonial. Optional, because the question itself asks
+  /// whether they would be *comfortable* giving one.
+  testimonial      String?
+  /// Q9's follow-on — may we use this in social or promotional material?
+  ///
+  /// Nullable, and NULL means they didn't say. That is not the same as "no"
+  /// and must never collapse into it: this is the column anyone would be
+  /// pointed at if a respondent ever objected to being quoted.
+  promoConsent     Boolean? @map("promo_consent")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  /// Moves when someone re-submits. Without it a revised answer is
+  /// indistinguishable from the original response.
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([createdAt])
+  @@map("seminar_feedback")
+}

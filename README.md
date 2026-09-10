@@ -23,16 +23,24 @@ app/
   icon.svg                favicon
   opengraph-image.tsx     generated 1200x630 social card
   robots.ts, sitemap.ts
-  actions/waitlist.ts     Server Action behind both forms
-  api/waitlist/route.ts   POST endpoint for programmatic signups
+  actions/                Server Actions behind the two forms
+  api/waitlist/           POST endpoint for programmatic signups
+  api/seminar-feedback/   POST endpoint for programmatic survey responses
+  seminar-feedback/       the seminar feedback survey, on its own route
 components/
-  landing/                page sections + the client-side form
+  landing/                page sections + the RS Community dialog
+  seminar/                the seminar feedback survey form
   screens/                the four in-app phone screens the page shows off
   ui/                     icon set, logo, and the shared design primitives
 lib/
+  contact.ts              name / email / phone rules, shared by both forms
   waitlist.ts             validation + the single joinWaitlist() entry point
   waitlist-state.ts       useActionState shape
-  waitlist-store.ts       persistence seam — see below
+  waitlist-store.ts       Prisma persistence for waitlist_signups
+  seminar-survey.ts       the nine questions and their scales
+  seminar-feedback.ts     validation + recordSeminarFeedback()
+  seminar-feedback-state.ts    useActionState shape
+  seminar-feedback-store.ts    Prisma persistence for seminar_feedback
 ```
 
 ## Styling
@@ -97,22 +105,89 @@ Action, which works before hydration. The same validation runs behind
 
 ```bash
 curl -X POST localhost:3000/api/waitlist \
-  -H 'content-type: application/json' -d '{"email":"you@salon.com"}'
+  -H 'content-type: application/json' -d '{
+    "name":"Priya Sharma","countryIso":"IN","phone":"98765 43210",
+    "email":"you@salon.com",
+    "solvedChallenges":true,"lovedSeminar":true,
+    "topTakeaway":"...","implementTomorrow":"...",
+    "changesTeamComms":true,"helpsGuestExperience":true,
+    "educationIdeas":"..."}'
 # 201 {"ok":true,"alreadyOnList":false}   — new
-# 200 {"ok":true,"alreadyOnList":true}    — already signed up
-# 400 {"ok":false,"error":"..."}          — rejected
+# 200 {"ok":true,"alreadyOnList":true}    — already signed up, answers revised
+# 400 {"ok":false,"field":"...","error":"..."}  — rejected
 ```
+
+All ten questions are required. `countryIso` is ISO 3166-1 alpha-2 and `phone`
+the national number; the two are stored joined as one E.164 number.
 
 Emails are lower-cased and trimmed before de-duplication. Each row records
 which CTA it came from (`hero` / `join` / `api`). A hidden `company` field is a
 honeypot: any value and the request is silently dropped.
 
-### Persistence — not done yet
+## Seminar feedback survey
 
-`lib/waitlist-store.ts` currently keeps signups in a process-local `Map`, so the
-whole flow is exercisable end to end but **nothing is persisted**. That file
-carries the exact Prisma replacement and the `WaitlistSignup` model to add.
-Set `DATABASE_URL` and swap it over before deploying.
+The Rockstar 2-Day Seminar Feedback Survey lives on its own route,
+`/seminar-feedback` — a page rather than a dialog, because it is reached by its
+own link or a QR code at the venue. It is `noindex`, and nothing on the landing
+page links to it.
+
+Nine questions, worded and numbered as the printed sheet asks them, defined
+once in `lib/seminar-survey.ts` and read from there by both the form and the
+validator. Five are answered on a five-point scale; four are open text. Q1–Q7
+are required. Q8 (what would make the next one better) and Q9 (a testimonial,
+plus permission to quote it) are optional — Q9 asks whether someone would be
+*comfortable* giving one, and a required field there collects "na" rather than
+testimonials.
+
+The page posts to the `submitSeminarFeedback` Server Action. The same rules run
+behind `POST /api/seminar-feedback`, which takes JSON or a form-encoded body:
+
+```bash
+curl -X POST localhost:3000/api/seminar-feedback \
+  -H 'content-type: application/json' -d '{
+    "name":"Priya Sharma","countryIso":"IN","phone":"98765 43210",
+    "email":"you@salon.com",
+    "overallRating":"excellent","contentRelevance":"very_relevant",
+    "greatestImpact":"...","applyConfidence":"very_confident",
+    "thirtyDayAction":"...","speakerRating":"excellent",
+    "eventRating":"very_good",
+    "improvementIdeas":"...","testimonial":"...","promoConsent":true}'
+# 201 {"ok":true,"alreadyResponded":false}  — new response
+# 200 {"ok":true,"alreadyResponded":true}   — the same person revised theirs
+# 400 {"ok":false,"field":"...","error":"..."}  — rejected
+```
+
+Scale answers are the stable slugs listed in `lib/seminar-survey.ts`
+(`very_good`, `not_confident_yet`, …), not the labels shown on the page, and
+each is checked against **its own** question's scale — a confidence value
+cannot be filed as an overall rating. `promoConsent` takes `true`/`false` or
+the strings `"yes"`/`"no"`; omitting it stores NULL, which means *didn't say*
+and is deliberately not the same as `false`.
+
+`email` de-duplicates. A second submission revises the response in place and
+sends no second confirmation — and it wins outright, including on the optional
+questions, so someone can withdraw a testimonial they would rather we did not
+quote.
+
+### Persistence
+
+Both forms write to Supabase Postgres through Prisma —
+`waitlist_signups` and `seminar_feedback`, one table each. Every migration in
+`prisma/migrations/` enables row-level security with no policies and revokes
+the default `anon` / `authenticated` grants, because Supabase otherwise exposes
+each table through PostgREST to anyone holding the project's anon key. Prisma
+connects as the table owner over the direct connection, so the app is
+unaffected. Set `DATABASE_URL` before running anything.
+
+### Confirmation email
+
+Both forms send the same confirmation through `sendWaitlistConfirmation`
+(`lib/email.ts`), queued with `after()` so a Resend round trip never sits in
+front of the response. Each form passes its own `X-Entity-Ref-ID` scope —
+Resend treats a repeated ref as the same send, so without that, somebody who
+filled in both forms would silently lose the second confirmation. A failed send
+is logged and swallowed: the row is already committed, and Resend being down
+must not turn a saved response into an error for the person who gave it.
 
 ## Open question — style guide vs. the landing artboard
 

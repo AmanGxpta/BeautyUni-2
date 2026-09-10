@@ -33,7 +33,16 @@ function getResend(): Resend | null {
   return (client ??= new Resend(apiKey));
 }
 
-export async function sendWaitlistConfirmation(email: string): Promise<void> {
+/**
+ * @param entityRef Resend's idempotency key for this send. Defaults to the
+ *   waitlist's own scope; the seminar feedback form passes its own, because
+ *   Resend treats a repeated `X-Entity-Ref-ID` as the same send and someone
+ *   who fills in both forms should get a confirmation for each.
+ */
+export async function sendWaitlistConfirmation(
+  email: string,
+  entityRef: string = `waitlist:${email}`,
+): Promise<void> {
   const resend = getResend();
   if (!resend) {
     console.warn(
@@ -56,7 +65,7 @@ export async function sendWaitlistConfirmation(email: string): Promise<void> {
       headers: {
         // Repeat submits are de-duplicated before we reach this point, but a
         // retried request upstream shouldn't produce a second copy either.
-        "X-Entity-Ref-ID": `waitlist:${email}`,
+        "X-Entity-Ref-ID": entityRef,
       },
     });
 
