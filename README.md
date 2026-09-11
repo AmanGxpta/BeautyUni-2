@@ -1,11 +1,8 @@
-# Rockstar — waitlist landing
+# BeautyUni
 
-The public sign-up site for Rockstar, the LMS for stylists. Next.js 16 (App
-Router, Turbopack), React 19, TypeScript.
-
-The design is a port of the `Rockstar Landing.html` artboard from the Claude
-Design project `d1209eb3-b0a0-45ae-96d4-cebdd02c82c3` ("STRIPPED" theme —
-charcoal surfaces, editorial red, cream text).
+The public site for **BeautyUni** — capability-first education for beauty,
+wellness and medaesthetics. Next.js 16 (App Router, Turbopack), React 19,
+TypeScript.
 
 ```bash
 pnpm install
@@ -13,94 +10,157 @@ cp .env.example .env.local
 pnpm dev
 ```
 
+## Pages
+
+| Route | What it is |
+| --- | --- |
+| `/` | Home — the four capabilities, who it is for, the podcast, the featured programme, the founders, the philosophy |
+| `/about` | The belief, the model, the founders in full |
+| `/podcast` | *From Passion to Profit*, every episode |
+| `/programmes` | The Rock Star Success System masterclass, with the enquiry card |
+| `/join` | The community form |
+| `/privacy`, `/terms` | Draft legal pages, `noindex` |
+| `/seminar-feedback` | The two-day seminar survey — **untouched by the redesign**, on its own plum theme |
+
+`app/(site)/` is a route group: it keeps the five content pages together in the
+tree without adding a `/site` segment to any URL. There is no `layout.tsx` in
+it, because the header treatment varies per page — `/podcast` opens on ink and
+needs the light-on-dark bar — and that is the page's own fact, not the group's.
+`components/site/shell.tsx` is the frame each page wraps itself in instead.
+
+## Content is data
+
+Everything the site says about the company lives in `lib/content.ts` — the four
+capabilities, the audience list, the episodes, the programme, the founders, the
+philosophy ladder, the contact details and the consent wording. Pages read from
+it rather than hard-coding copy, so correcting a date or a job title is one
+edit that every page picks up, and no page can drift into a claim the source
+copy never made.
+
 ## Layout
 
 ```
 app/
   layout.tsx              fonts (next/font), metadata, viewport
-  page.tsx                renders <Landing/>
-  globals.css             the whole design system + landing styles
-  icon.svg                favicon
+  page.tsx                the home page
+  site.css                the BeautyUni design system
+  globals.css             the older Rockstar/seminar-feedback stylesheet
+  (site)/                 about · podcast · programmes · join · privacy · terms
+  seminar-feedback/       the two-day seminar survey, on its own route
+  actions/                Server Actions behind the three forms
+  api/community/          POST endpoint for programmatic joins
+  api/waitlist/, api/seminar-feedback/
   opengraph-image.tsx     generated 1200x630 social card
   robots.ts, sitemap.ts
-  actions/                Server Actions behind the two forms
-  api/waitlist/           POST endpoint for programmatic signups
-  api/seminar-feedback/   POST endpoint for programmatic survey responses
-  seminar-feedback/       the seminar feedback survey, on its own route
 components/
-  landing/                page sections + the RS Community dialog
+  site/                   nav, footer, shell, home, episode, join form, icons
   seminar/                the seminar feedback survey form
-  screens/                the four in-app phone screens the page shows off
-  ui/                     icon set, logo, and the shared design primitives
+  emails/                 the three transactional templates
+  landing/, screens/, ui/ the archived Rockstar landing page
 lib/
-  contact.ts              name / email / phone rules, shared by both forms
-  waitlist.ts             validation + the single joinWaitlist() entry point
-  waitlist-state.ts       useActionState shape
-  waitlist-store.ts       Prisma persistence for waitlist_signups
-  seminar-survey.ts       the nine questions and their scales
-  seminar-feedback.ts     validation + recordSeminarFeedback()
-  seminar-feedback-state.ts    useActionState shape
-  seminar-feedback-store.ts    Prisma persistence for seminar_feedback
+  content.ts              the site's ground truth (see above)
+  contact.ts              name / email / phone rules, shared by every form
+  community*.ts           validation, state and persistence for /join
+  seminar-*.ts            the same three for /seminar-feedback
+  waitlist*.ts            the same three for the archived Rockstar form
 ```
 
 ## Styling
 
-All styling is the hand-authored CSS from the design bundle, in
-`app/globals.css`, with the palette and type roles reconciled against
-`Rockstar-Style-Guide.html` v1.0. Tailwind is imported **without preflight**
-(`tailwindcss/theme.css` + `tailwindcss/utilities.css`, no
-`tailwindcss/preflight.css`) so utilities are available for future work without
-a second reset competing with the design's own.
+`app/site.css` is the whole design system, hand-authored, every rule prefixed
+`s-` and scoped under `.s-root`. It is a separate file from `globals.css` on
+purpose: `/seminar-feedback` and the archived landing page still read their
+tokens from that older sheet, and the two must not reach into each other.
 
-The three brand faces — Playfair Display (headlines), DM Sans (body/UI),
-Raleway (wordmark/eyebrows) — are self-hosted by `next/font` and exposed as the
-`--display` / `--ui` / `--word` tokens. Roles do not swap, per the guide:
+**The reset uses `:where()`** — `.s-root :where(h1,h2,h3,h4,p){margin:0}`. Written
+the obvious way as `.s-root p{margin:0}` it scores one class plus one element
+and silently outranks every single-class rule in the file, which flattens the
+page's vertical rhythm with no error anywhere. For the same reason, no rule in
+`site.css` styles a part by its tag: a label inside a card gets a class
+(`.s-perk__t`), never `.s-perk b`.
 
-| Role | Spec |
-| --- | --- |
-| Eyebrow / section label / section number | Raleway 200 · 10–11px · 0.22em · uppercase · `--clay` |
-| Navigation | Raleway 200 · 11px · 0.18em · uppercase |
-| Button copy | Raleway 200 · 11px · 0.16em · uppercase |
-| Metadata / sub-label / input label | Raleway 200 · 10px · 0.14–0.16em · uppercase |
-| Status badge | Raleway 300 · 10px · 0.14em · uppercase · pill |
-| Headlines | Playfair Display 700 |
-| Body / interface | DM Sans 400 (500 emphasis, 300 captions) |
+### Palette
 
-The `:root` block in `app/globals.css` mirrors the guide's custom properties
-one-for-one — surfaces `#111111`/`#1C1C1C`/`#252525`/`#333333`, Rockstar Red
-`#8C1A1A` with hover/muted/faint, cream `#F0EDE8`, and borders at
-0.10 / 0.18 / 0.28 alpha.
+Warm, editorial and tactile: terracotta on cream, ink for depth.
 
-The wordmark is the supplied `Asset 29@2x-100.svg` artwork rendered inline by
-`components/ui/logo.tsx` — a solid `#AA1F25` field, cream `#F9F2F2` lettering,
-`#E9C6C7` hairline. Those are the asset's own colours and it does not re-tint
-per surface, so `RSLogo` takes only a `size`.
+| Token | Value | Role |
+| --- | --- | --- |
+| `--s-terra` | `#C75C3C` | The single accent — CTAs, eyebrows, italic emphasis |
+| `--s-cream` | `#FCF7F3` | Page |
+| `--s-sand` | `#F4EAE1` | Alternating sections |
+| `--s-white` | `#FFFFFF` | Cards |
+| `--s-ink` | `#1E1713` | Text, and the dark sections' surface |
 
-Section reveals, the sticky nav, the hero parallax and the pinned phone
-showcase are all CSS scroll-driven animations (`view()` / `scroll(root)`
-timelines) behind `@supports`, with a `prefers-reduced-motion` fallback. There
-is no scroll JavaScript.
+A fixed SVG-noise overlay at 7% sits over the whole page (`.s-root::before`,
+`mix-blend-mode: multiply`) so the flat colour reads as stock rather than as a
+screen.
 
-The showcase rail is three phones: the animating one in front, plus two static
-flankers (`.show-side-l` / `.show-side-r`, hidden under 1080px) carrying screens
-that are deliberately *not* in the rotation. The four rotating frames are
-addressed by `.show-frame-1..4`, not `:nth-child`, so adding siblings to
-`.show-device` cannot silently reindex the animation. `.show-steps`,
-`.show-ticks` and `.how-grid` do still use `:nth-child` — don't insert wrappers
-inside those.
+### Type
 
-Each step is `min-height: 100vh`, so a step's `cover` range opens the moment the
-previous one is centred. The swap keyframes therefore hold flat over 0–16% and
-84–100%; without that dead zone the next screen ghosts through the current one
-at rest.
+Two faces, both self-hosted by `next/font`:
 
-`<html>` carries `data-scroll-behavior="smooth"`, which Next 16 requires for it
-to keep managing scroll position with `scroll-behavior: smooth` set globally.
+- **Fraunces** (display) — a variable old-style serif. The `SOFT` and `WONK`
+  axes are what give the italic its hand-cut feel; `WONK` is set on the italic
+  only, and it is the one thing a Georgia fallback cannot imitate.
+- **DM Sans** (everything else) — body, interface, the tracked uppercase
+  eyebrows.
+
+Playfair and Raleway stay declared in the root layout because
+`/seminar-feedback` and the archived landing page read them from `globals.css`;
+removing them would leave those pages in a fallback face.
+
+### Motion
+
+One `IntersectionObserver` in `components/site/reveal.tsx` adds `.is-in` to
+every `[data-reveal]` element as it arrives, and unobserves it. A wrapper
+component per element would have pushed whole pages into the client bundle to
+buy a CSS class. Under `prefers-reduced-motion: reduce` the observer marks
+everything revealed immediately and the CSS drops every transition.
+
+The header hides on the way down and returns on the way up, and the mobile menu
+closes from the click that navigates rather than from a `pathname` effect — a
+tap on the link for the page you are already on produces no route change, and
+an effect keyed on the path would leave the panel covering the page.
+
+## Join the community
+
+`/join` posts to the `submitCommunity` Server Action, which works before
+hydration. The same validation runs behind `POST /api/community`:
+
+```bash
+curl -X POST localhost:3000/api/community \
+  -H 'content-type: application/json' -d '{
+    "name":"Priya Sharma","countryIso":"IN","phone":"98765 43210",
+    "sameWhatsapp":true,"email":"you@salon.com","city":"Mumbai",
+    "role":"Salon owner","consent":true}'
+# 201 {"ok":true,"alreadyJoined":false}  — new member
+# 200 {"ok":true,"alreadyJoined":true}   — details revised in place
+# 400 {"ok":false,"field":"...","error":"..."}  — rejected
+```
+
+`countryIso` is ISO 3166-1 alpha-2 and `phone` the national number; the two are
+stored joined as one E.164 number. `sameWhatsapp` resolves to the phone number
+at write time rather than being stored as a flag — a flag stops being true the
+moment one of the two is edited later, and a message then goes to the wrong
+number.
+
+`consent` is required and a submission without it is a 400, never a row with
+the box unticked: it is the legal basis for every message sent afterwards. The
+wording someone agreed to is stored verbatim on the row (`consent_text`), so
+rewriting the copy on the page cannot change what an existing member is
+recorded as having consented to. `CONSENT_LEAD` and `CONSENT_WITHDRAW` in
+`lib/content.ts` are the single source for both the page and the row.
+
+A `?p=…` on the URL is recorded as the row's `source` (`join:rock-star`), so a
+join from a campaign link or a QR code can be told apart from one off the nav.
+A hidden `company` field is a honeypot: any value and the request is silently
+dropped.
 
 ## Waitlist
 
-Both forms (hero and the closing CTA) post to the `submitWaitlist` Server
-Action, which works before hydration. The same validation runs behind
+The Rockstar waitlist landing page is archived at `app/_archive/page.tsx` and
+no longer routed; its Server Action and API route are still live. Both of its
+forms post to `submitWaitlist`, and the same validation runs behind
 `POST /api/waitlist`:
 
 ```bash
@@ -171,8 +231,11 @@ quote.
 
 ### Persistence
 
-Both forms write to Supabase Postgres through Prisma —
-`waitlist_signups` and `seminar_feedback`, one table each. Every migration in
+Every form writes to Supabase Postgres through Prisma — `community_members`,
+`seminar_feedback` and `waitlist_signups`, one table each. Three tables rather
+than one: the forms ask different questions of different people at different
+moments, and folding them together would give every row a screenful of NULLs
+belonging to somebody else's form. Every migration in
 `prisma/migrations/` enables row-level security with no policies and revokes
 the default `anon` / `authenticated` grants, because Supabase otherwise exposes
 each table through PostgREST to anyone holding the project's anon key. Prisma
@@ -181,28 +244,26 @@ unaffected. Set `DATABASE_URL` before running anything.
 
 ### Confirmation email
 
-Both forms send the same confirmation through `sendWaitlistConfirmation`
-(`lib/email.ts`), queued with `after()` so a Resend round trip never sits in
-front of the response. Each form passes its own `X-Entity-Ref-ID` scope —
+Each form sends its own message through `lib/email.ts` — `sendCommunityWelcome`
+for `/join`, `sendSeminarFeedbackConfirmation` for the survey,
+`sendWaitlistConfirmation` for the archived form — queued with `after()` so a
+Resend round trip never sits in front of the response. Each passes its own
+`X-Entity-Ref-ID` scope —
 Resend treats a repeated ref as the same send, so without that, somebody who
 filled in both forms would silently lose the second confirmation. A failed send
 is logged and swallowed: the row is already committed, and Resend being down
 must not turn a saved response into an error for the person who gave it.
 
-## Open question — style guide vs. the landing artboard
+## Notes
 
-The palette and type system now follow `Rockstar-Style-Guide.html`. Its
-*Usage Rules* section goes further than colour and type, and the landing
-artboard contradicts several of those rules by design:
+`next.config.ts` no longer redirects `/` to `/seminar-feedback`; the home page
+serves the site. The survey keeps its own route, its own plum theme and its own
+`noindex`.
 
-- **No gradients, drop shadows, or blur.** The hero glow, the join-section
-  wash, the phone bezel shadow and the frosted nav are all built on them.
-- **Card corners max 10px, "not pill-shaped".** The CTAs, the email input and
-  the badges are 999px pills.
-- **Motion: no entrance animations.** The whole scroll-driven reveal and the
-  pinned showcase are entrance animations.
-- **Palette is red-only plus status green.** The certificate section is built
-  on gold (`--gold` `#C99A5C`), and the phone screens use rose and berry.
+`<html>` carries `data-scroll-behavior="smooth"`, which Next 16 requires for it
+to keep managing scroll position while `scroll-behavior: smooth` is set
+globally.
 
-None of that was changed — reconciling it is a redesign of approved sections,
-not a theming pass. Flagging it as a decision to make.
+The privacy policy and the terms are launch placeholders and say so on the
+page. They should be reviewed against the Digital Personal Data Protection Act,
+2023 before BeautyUni relies on them.

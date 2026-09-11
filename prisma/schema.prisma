@@ -138,3 +138,54 @@ model SeminarFeedback {
   @@index([createdAt])
   @@map("seminar_feedback")
 }
+
+/// One row per person who joins the BeautyUni community at `/join`.
+///
+/// Its own table rather than more columns on `WaitlistSignup`: that model is
+/// the Rockstar seminar's ten-question form and every one of its answer
+/// columns would be NULL here, while every row there would carry NULL for the
+/// city, role and WhatsApp number this form requires. The two forms also ask
+/// for consent in different words, and the wording someone agreed to is the
+/// thing that makes the consent meaningful — it is recorded per row rather
+/// than assumed from the table.
+///
+/// `email` is unique so a repeat submission revises the same person rather
+/// than making a second row; `joinCommunity` reports that back as
+/// `alreadyJoined` and skips a second welcome email.
+model CommunityMember {
+  id    String @id @default(cuid())
+  email String @unique
+  name  String
+
+  /// The whole number in E.164, e.g. `+919876543210` — dialling code,
+  /// national number, no separators. The form asks for the country and the
+  /// number as two controls; they are joined on the way in.
+  phoneNumber String @map("phone_number")
+
+  /// The WhatsApp number in E.164. Usually the same as `phoneNumber` — the
+  /// form has a "same as my phone" tick — but stored in full rather than as a
+  /// flag, because the flag stops being true the moment someone edits one of
+  /// the two and a message then goes to the wrong number.
+  whatsappNumber String @map("whatsapp_number")
+
+  city String
+  /// Free text, not a Postgres enum: the picker's list will grow, and a new
+  /// role should not need a migration before the form can collect it.
+  role String
+
+  /// The consent wording shown on the page, stored verbatim as it was agreed
+  /// to. Re-wording the form must not change what an existing member is
+  /// recorded as having consented to.
+  consentText String @map("consent_text")
+
+  /// Which page or campaign the join came from. Plain string for the same
+  /// reason as `role`.
+  source String @default("join")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  /// Moves when someone submits again with revised details.
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([createdAt])
+  @@map("community_members")
+}

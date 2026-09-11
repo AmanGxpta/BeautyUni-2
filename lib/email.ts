@@ -8,6 +8,10 @@
  */
 import { Resend } from "resend";
 import {
+  CommunityWelcome,
+  communityWelcomeText,
+} from "@/components/emails/community-welcome";
+import {
   SeminarFeedbackConfirmation,
   seminarFeedbackConfirmationText,
 } from "@/components/emails/seminar-feedback-confirmation";
@@ -33,6 +37,13 @@ const FROM =
 const SEMINAR_FROM =
   process.env.RESEND_FROM_SEMINAR ??
   FROM.replace(/^[^<]*</, "BeautyUni <");
+
+/**
+ * The BeautyUni site's own sender. Same mailbox as everything else — the
+ * verified sending domain is what Resend will accept — but the display name is
+ * the first piece of branding a recipient sees, before the email is opened.
+ */
+const SITE_FROM = process.env.RESEND_FROM_SITE ?? SEMINAR_FROM;
 
 /**
  * Built lazily rather than at module scope: importing this file must not throw
@@ -149,5 +160,50 @@ export async function sendSeminarFeedbackConfirmation(
       "[email] failed to send the seminar feedback confirmation",
       err,
     );
+  }
+}
+
+/**
+ * Welcome for someone who joined the BeautyUni community at `/join`.
+ *
+ * Best-effort like everything else here — the row is committed before we are
+ * called, so a Resend outage must not turn a saved signup into an error.
+ *
+ * @param entityRef Resend's idempotency key, scoped to this form so someone
+ *   who fills in more than one of the site's forms gets a message for each:
+ *   Resend treats a repeated `X-Entity-Ref-ID` as the same send.
+ */
+export async function sendCommunityWelcome(
+  email: string,
+  name?: string,
+  entityRef: string = `community:${email}`,
+): Promise<void> {
+  const resend = getResend();
+  if (!resend) {
+    console.warn(
+      "[email] RESEND_API_KEY is not set — skipped the community welcome to " +
+        email +
+        ". The signup itself was saved.",
+    );
+    return;
+  }
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: SITE_FROM,
+      to: [email],
+      subject: "Welcome to BeautyUni",
+      react: CommunityWelcome({ siteUrl, name }),
+      text: communityWelcomeText(siteUrl, name),
+      headers: { "X-Entity-Ref-ID": entityRef },
+    });
+
+    if (error) {
+      console.error("[email] Resend rejected the community welcome", error);
+      return;
+    }
+    console.log(`[email] community welcome sent to ${email} (${data?.id})`);
+  } catch (err) {
+    console.error("[email] failed to send the community welcome", err);
   }
 }
