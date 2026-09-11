@@ -37,7 +37,7 @@ const EYEBROW = "Feedback received";
 const HEADLINE = "Thank you for your feedback.";
 
 const BODY = [
-  "Your answers from the two-day seminar are with the team. They go to the people who ran the room \u2014 the sessions, the speakers and the format of the next one all get revisited against what came back from this one.",
+  "Your answers from the two-days seminar are with the team. They go to the people who ran the room \u2014 the sessions, the speakers and the format of the next one all get revisited against what came back from this one.",
 ];
 
 const NEXT_LEAD = "What happens to it:";
@@ -57,7 +57,7 @@ const NEXT: Array<[string, string]> = [
   ],
 ];
 
-const SIGN_OFF = "Thank you for the two days";
+const SIGN_OFF = "Thank you for the two days!";
 
 export function SeminarFeedbackConfirmation({ siteUrl }: { siteUrl: string }) {
   return (
