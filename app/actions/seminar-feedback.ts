@@ -23,7 +23,7 @@ const FIELDS = [
 ] as const satisfies readonly SeminarField[];
 
 /**
- * Server Action behind the Rockstar 2-Day Seminar Feedback Survey.
+ * Server Action behind the BeautyUni 2-Day Seminar Feedback Survey.
  *
  * Shaped for `useActionState`. The survey is a plain form post on its own
  * route — nothing here depends on the client having serialized the answers,

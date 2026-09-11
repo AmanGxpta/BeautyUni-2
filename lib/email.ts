@@ -8,6 +8,10 @@
  */
 import { Resend } from "resend";
 import {
+  SeminarFeedbackConfirmation,
+  seminarFeedbackConfirmationText,
+} from "@/components/emails/seminar-feedback-confirmation";
+import {
   WaitlistConfirmation,
   waitlistConfirmationText,
 } from "@/components/emails/waitlist-confirmation";
@@ -19,6 +23,16 @@ import { siteUrl } from "./site";
  */
 const FROM =
   process.env.RESEND_FROM ?? "Rockstar LMS <support@naviteklabs.com>";
+
+/**
+ * The seminar survey is BeautyUni's, so its confirmation says so in the
+ * inbox — the display name is the first piece of branding a recipient sees,
+ * before the email is even opened. Same mailbox, because the verified sending
+ * domain is what Resend will accept and that has not changed.
+ */
+const SEMINAR_FROM =
+  process.env.RESEND_FROM_SEMINAR ??
+  FROM.replace(/^[^<]*</, "BeautyUni <");
 
 /**
  * Built lazily rather than at module scope: importing this file must not throw
@@ -76,5 +90,64 @@ export async function sendWaitlistConfirmation(
     console.log(`[email] waitlist confirmation sent to ${email} (${data?.id})`);
   } catch (err) {
     console.error("[email] failed to send the waitlist confirmation", err);
+  }
+}
+
+/**
+ * Confirmation for a response to the two-day seminar feedback survey.
+ *
+ * Its own email rather than the waitlist's: the two go to different people at
+ * different moments, and a waitlist welcome is the wrong receipt for someone
+ * who just answered nine questions about a seminar they already attended.
+ *
+ * Best-effort like everything else here — the response is committed before we
+ * are called, so a Resend outage must not turn a saved response into an error.
+ *
+ * @param entityRef Resend's idempotency key for this send, scoped to this form
+ *   so someone who fills in both this and the RS Community form gets a
+ *   confirmation for each: Resend treats a repeated `X-Entity-Ref-ID` as the
+ *   same send.
+ */
+export async function sendSeminarFeedbackConfirmation(
+  email: string,
+  entityRef: string = `seminar-feedback:${email}`,
+): Promise<void> {
+  const resend = getResend();
+  if (!resend) {
+    console.warn(
+      "[email] RESEND_API_KEY is not set — skipped the seminar feedback confirmation to " +
+        email +
+        ". The response itself was saved.",
+    );
+    return;
+  }
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: SEMINAR_FROM,
+      to: [email],
+      subject: "Thank you for your seminar feedback",
+      react: SeminarFeedbackConfirmation({ siteUrl }),
+      text: seminarFeedbackConfirmationText(),
+      headers: {
+        "X-Entity-Ref-ID": entityRef,
+      },
+    });
+
+    if (error) {
+      console.error(
+        "[email] Resend rejected the seminar feedback confirmation",
+        error,
+      );
+      return;
+    }
+    console.log(
+      `[email] seminar feedback confirmation sent to ${email} (${data?.id})`,
+    );
+  } catch (err) {
+    console.error(
+      "[email] failed to send the seminar feedback confirmation",
+      err,
+    );
   }
 }

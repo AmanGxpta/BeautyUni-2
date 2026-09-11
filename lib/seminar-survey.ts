@@ -1,5 +1,5 @@
 /**
- * The Rockstar 2-Day Seminar Feedback Survey — its nine questions, verbatim,
+ * The BeautyUni 2-Day Seminar Feedback Survey — its nine questions, verbatim,
  * and the scales they are answered on.
  *
  * One module, imported by both the page that renders the form and the action
@@ -116,7 +116,7 @@ export const SEMINAR_QUESTIONS: readonly SeminarQuestion[] = [
     kind: "scale",
     name: "overallRating",
     label:
-      "Overall, how would you rate your experience at the two-day Rockstar Seminar?",
+      "Overall, how would you rate your experience at the two-day BeautyUni Seminar?",
     options: RATING_SCALE,
   },
   {
@@ -164,7 +164,7 @@ export const SEMINAR_QUESTIONS: readonly SeminarQuestion[] = [
   {
     kind: "text",
     name: "improvementIdeas",
-    label: "What would make the next Rockstar Seminar even more valuable for you?",
+    label: "What would make the next BeautyUni Seminar even more valuable for you?",
     hint: "Topics, speakers, formats, improvements — anything you'd like to see.",
     placeholder: "What you'd change, add, or do differently",
     optional: true,
@@ -173,7 +173,7 @@ export const SEMINAR_QUESTIONS: readonly SeminarQuestion[] = [
     kind: "text",
     name: "testimonial",
     label:
-      "Would you be comfortable sharing a short testimonial about your Rockstar Seminar experience?",
+      "Would you be comfortable sharing a short testimonial about your BeautyUni Seminar experience?",
     placeholder: "A line or two, in your own words",
     optional: true,
     consent: {

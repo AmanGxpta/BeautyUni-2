@@ -5,7 +5,7 @@ import {
 } from "@/lib/seminar-feedback";
 
 /**
- * POST /api/seminar-feedback — programmatic submission of the Rockstar 2-Day
+ * POST /api/seminar-feedback — programmatic submission of the BeautyUni 2-Day
  * Seminar Feedback Survey.
  *
  * Accepts JSON or a form-encoded body, and shares every rule with the page at

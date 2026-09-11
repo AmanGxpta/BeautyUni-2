@@ -9,7 +9,7 @@ import { COUNTRIES, DEFAULT_COUNTRY_ISO } from "@/lib/countries";
 import { SEMINAR_QUESTIONS, type SeminarField } from "@/lib/seminar-survey";
 
 /**
- * The Rockstar 2-Day Seminar Feedback Survey.
+ * The BeautyUni 2-Day Seminar Feedback Survey.
  *
  * A page rather than a dialog — the RS Community form is opened from a CTA
  * that is already on screen, while this one is reached by its own link or a
@@ -71,7 +71,7 @@ export function SeminarFeedbackForm() {
     return (
       <div className="sf-card sf-done" ref={rootRef}>
         <span className="cd-done-tick">
-          <Icon name="check" size={24} c="#F0EDE8" />
+          <Icon name="check" size={24} c="#FFFFFF" />
         </span>
         <h2 className="rs-display cd-done-h">Thank you.</h2>
         <p className="cd-done-b">
@@ -79,7 +79,7 @@ export function SeminarFeedbackForm() {
           your inbox. It shapes what we teach at the next seminar.
         </p>
         <Link className="cd-submit" href="/">
-          Back to Rockstar <Icon name="chevR" size={17} />
+          Back to BeautyUni <Icon name="chevR" size={17} />
         </Link>
       </div>
     );
@@ -320,7 +320,7 @@ export function SeminarFeedbackForm() {
           </div>
           <p className="cd-fine">
             <Icon name="lock" size={14} c="var(--clay-deep)" />
-            We&rsquo;ll only use your details to reach you about Rockstar.
+            We&rsquo;ll only use your details to reach you about BeautyUni.
           </p>
         </div>
       </form>

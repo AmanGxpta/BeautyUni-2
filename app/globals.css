@@ -253,7 +253,7 @@ body{margin:0;background:var(--paper);color:var(--ink)}
 @keyframes cdRise{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
 
 /* ── Seminar feedback survey ────────────────────────────────────────
-   /seminar-feedback — the Rockstar 2-Day Seminar Feedback Survey.
+   /seminar-feedback — the BeautyUni 2-Day Seminar Feedback Survey.
 
    A page, not a dialog: it's reached by its own link or a QR code at the
    venue, where there is nothing behind it for a modal to be modal over.
@@ -320,6 +320,98 @@ body{margin:0;background:var(--paper);color:var(--ink)}
 .sf-done .cd-submit{align-self:center}
 
 .sf-legal{position:relative;z-index:1;max-width:760px;width:100%;margin:0 auto;padding:0 24px 34px;font-size:12.5px;color:var(--ink-3)}
+
+/* ── BeautyUni theme — /seminar-feedback ────────────────────────────
+   The survey wears BeautyUni's identity: white paper, the #7D0F49 plum
+   for every CTA and highlight, #F7F5F6 for the wells an input or an
+   unchecked option sits in.
+
+   Written as a token override on one scope rather than a second copy of
+   the page's CSS: every .sf-* and .cd-* rule above already reads its
+   colour from a token, so re-pointing the tokens re-themes the whole
+   page and leaves the dark landing page and its dialog untouched. Only
+   the rules whose value is a *shape* rather than a colour — the pill
+   radii, the thin Raleway caps that go invisible on white — are
+   restated below. */
+.bu{
+  /* surfaces */
+  --paper:#FFFFFF;        /* page */
+  --surface:#FFFFFF;      /* card */
+  --paper-2:#F7F5F6;      /* tertiary — field wells, unchecked options */
+  --paper-3:#EFEBED;      /* hover on the wells */
+
+  /* ink */
+  --ink:#141014;
+  --cream-2:#FFFFFF;
+  --cream-3:#F7F5F6;
+  --ink-2:#4E464A;        /* body copy — 8.9:1 on white */
+  --ink-3:#8B8085;        /* hints, metadata — 3.7:1, never body text */
+
+  --line:rgba(20,16,20,.09);
+  --line-2:rgba(20,16,20,.14);
+  --line-3:rgba(20,16,20,.30);
+
+  /* BeautyUni plum — the sole accent */
+  --clay:#7D0F49;
+  --clay-hover:#650C3B;   /* darker on hover: on white, down reads as press */
+  --clay-muted:#520A30;
+  --clay-faint:#F7EDF2;
+  --clay-deep:#7D0F49;    /* the dark theme's "red that is legible as text";
+                             the plum is already 10.3:1 on white, so it is
+                             the same colour here */
+  --clay-tint:rgba(125,15,73,.10);
+  --clay-wash:rgba(125,15,73,.05);
+  --rose:#A8547E;
+  --rose-tint:rgba(125,15,73,.12);
+
+  /* A wrong answer must not look like a heading: on this page --clay-deep
+     is the brand plum and carries eyebrows and numbers, so the invalid
+     state gets a red of its own instead of borrowing it. */
+  --err:#B3261E;
+
+  /* The wordmark is a geometric sans; Playfair under it reads as a
+     different company's page. */
+  --display:var(--ui);
+
+  /* Depth on white comes from a soft shadow, not from surface contrast —
+     the card and the page are both #FFFFFF. */
+  --sh-1:0 1px 2px rgba(20,16,20,.05);
+  --sh-2:0 8px 26px rgba(20,16,20,.07);
+  --sh-3:0 16px 40px rgba(20,16,20,.08);
+}
+/* The page frame is 100dvh, so only overscroll rubber-banding can show the
+   body underneath it — which is still the dark theme's --paper. */
+body:has(.bu){background:#FFFFFF}
+
+.bu .rs-display{font-weight:700;letter-spacing:-.03em}
+/* Raleway 200 is a ghost on white; these small tracked caps carry at 600. */
+.bu .rs-eyebrow,.bu .sf-group-t,.bu .cd-num,.bu .cd-optional{font-weight:600}
+
+/* The dark page's red bloom would be a bruise on white. The faintest plum
+   wash instead — enough that the head is not floating on flat paper. */
+.bu .sf-glow{top:-300px;background:radial-gradient(50% 50% at 50% 34%,rgba(125,15,73,.07),transparent 70%),radial-gradient(34% 34% at 22% 62%,rgba(125,15,73,.04),transparent 70%)}
+
+.bu-logo{display:block;width:auto;height:52px;margin:-10px 0}
+
+/* Square-ish chrome, the way the BeautyUni site draws its buttons and
+   fields — the dark theme's 999px pills are the one shape that does not
+   survive the change of identity. */
+.bu .sf-card{border-radius:16px;box-shadow:var(--sh-2)}
+.bu .sf-foot{border-radius:0 0 15px 15px}
+.bu .cd-q input,.bu .cd-q textarea{background:var(--paper-2);border-radius:8px}
+/* background-color only: the shorthand above it carries the chevron. */
+.bu .cd-dial{background-color:var(--paper-2);border-radius:8px}
+.bu .sf-opt span,.bu .cd-opt span{background:var(--paper-2);border-radius:8px}
+.bu .cd-submit,.bu .cd-back{border-radius:8px}
+/* Cream text was for a charcoal page; on the plum it is plain white. */
+.bu .cd-submit,.bu .sf-done .cd-submit,.bu .sf-opt input:checked+span,.bu .cd-opt input:checked+span{color:#FFFFFF}
+/* The reference site's secondary button: white, a hard ink rule, no fill. */
+.bu .cd-back{box-shadow:inset 0 0 0 1.6px var(--ink)}
+.bu .cd-back:hover{background:var(--paper-2);box-shadow:inset 0 0 0 1.6px var(--ink)}
+.bu .sf-consent{border-left-color:var(--line-3)}
+
+.bu .cd-err{color:var(--err)}
+.bu .cd-q-bad input,.bu .cd-q-bad textarea,.bu .cd-q-bad .cd-dial,.bu .cd-q-bad .sf-opt span{box-shadow:inset 0 0 0 1.5px var(--err)}
 
 /* how */
 .how{padding-top:40px}
@@ -508,6 +600,10 @@ body{margin:0;background:var(--paper);color:var(--ink)}
   .sf-foot{margin:0 -18px;padding:16px 18px calc(18px + env(safe-area-inset-bottom));border-radius:0}
   .sf-done{padding:44px 22px 38px}
   .sf-legal{padding:0 18px 28px}
+  /* The edge-to-edge card wins over the BeautyUni radii above. */
+  .bu .sf-card{border-radius:0;box-shadow:none}
+  .bu .sf-foot{border-radius:0}
+  .bu-logo{height:46px}
   .hero-device{--ps:.62}
   .show-rail{flex-direction:column;align-items:center;gap:8px;padding-bottom:26px;background:linear-gradient(180deg,var(--paper) calc(100% - 26px),rgba(17,17,17,0))}
   .show-device{--ps:.36}

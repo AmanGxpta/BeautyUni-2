@@ -1,5 +1,5 @@
 import { after } from "next/server";
-import { sendWaitlistConfirmation } from "./email";
+import { sendSeminarFeedbackConfirmation } from "./email";
 import {
   isValidEmail,
   isValidPhone,
@@ -243,8 +243,9 @@ export async function recordSeminarFeedback(input: {
  * a Resend round trip is the slowest thing in a submission, and the person has
  * already done their part by the time it runs.
  *
- * The same email the RS Community form sends, by the same path. The reference
- * id is scoped to this form so that someone who fills in both gets both
+ * Its own BeautyUni-themed email rather than the RS Community form's welcome
+ * (components/emails/seminar-feedback-confirmation.tsx). The reference id is
+ * scoped to this form so that someone who fills in both gets both
  * confirmations: Resend treats a repeated `X-Entity-Ref-ID` as the same send,
  * and without the scope the second form's email would be silently dropped.
  *
@@ -256,8 +257,8 @@ export async function recordSeminarFeedback(input: {
 function sendConfirmation(email: string): void {
   const ref = `seminar-feedback:${email}`;
   try {
-    after(() => sendWaitlistConfirmation(email, ref));
+    after(() => sendSeminarFeedbackConfirmation(email, ref));
   } catch {
-    void sendWaitlistConfirmation(email, ref);
+    void sendSeminarFeedbackConfirmation(email, ref);
   }
 }
