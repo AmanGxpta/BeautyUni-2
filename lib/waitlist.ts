@@ -52,11 +52,7 @@ export type WaitlistAnswerDraft = Partial<WaitlistAnswers>;
 
 /** Names of every field the form posts — also the keys an error is reported against. */
 export type WaitlistField =
-  | "name"
-  | "countryIso"
-  | "phone"
-  | "email"
-  | keyof WaitlistAnswers;
+  "name" | "countryIso" | "phone" | "email" | keyof WaitlistAnswers;
 
 export const YES_NO_FIELDS = [
   "solvedChallenges",
@@ -89,8 +85,9 @@ const MISSING_ANSWER: Record<keyof WaitlistAnswers, string> = {
   solvedChallenges: "Let us know whether we solved any of your challenges.",
   lovedSeminar: "Let us know how the seminar landed for you.",
   topTakeaway: "Tell us your No. 1 takeaway.",
-  implementTomorrow: "Tell us what you'd implement in your salon tomorrow.",
-  changesTeamComms: "Let us know whether this changes how you talk to your team.",
+  implementTomorrow: "Tell us what you would implement in your salon tomorrow.",
+  changesTeamComms:
+    "Let us know whether this changes how you talk to your team.",
   helpsGuestExperience: "Let us know whether the Rockstar way would help.",
   educationIdeas: "Tell us what we could add — a line is plenty.",
 };
@@ -106,10 +103,13 @@ function parseAnswer(raw: unknown): string | undefined {
 }
 
 /** Pulls the seven answers out of whatever shape they arrived in. */
-export function readAnswers(get: (field: keyof WaitlistAnswers) => unknown): WaitlistAnswerDraft {
+export function readAnswers(
+  get: (field: keyof WaitlistAnswers) => unknown,
+): WaitlistAnswerDraft {
   const answers: WaitlistAnswerDraft = {};
   for (const field of YES_NO_FIELDS) answers[field] = parseYesNo(get(field));
-  for (const field of TEXT_ANSWER_FIELDS) answers[field] = parseAnswer(get(field));
+  for (const field of TEXT_ANSWER_FIELDS)
+    answers[field] = parseAnswer(get(field));
   return answers;
 }
 
@@ -150,19 +150,33 @@ export async function joinWaitlist(input: {
   // only point where it becomes a country.
   const country: Country | undefined = findCountry(input.countryIso);
   if (!country) {
-    return { ok: false, field: "countryIso", error: "Choose your country dialling code." };
+    return {
+      ok: false,
+      field: "countryIso",
+      error: "Choose your country dialling code.",
+    };
   }
 
   const phone = normalizePhone(input.phone);
-  if (!phone) return { ok: false, field: "phone", error: "Enter your phone number." };
+  if (!phone)
+    return { ok: false, field: "phone", error: "Enter your phone number." };
   if (!isValidPhone(phone)) {
-    return { ok: false, field: "phone", error: "That doesn't look like a valid phone number." };
+    return {
+      ok: false,
+      field: "phone",
+      error: "That doesn't look like a valid phone number.",
+    };
   }
 
   const email = normalizeEmail(input.email);
-  if (!email) return { ok: false, field: "email", error: "Enter your email address." };
+  if (!email)
+    return { ok: false, field: "email", error: "Enter your email address." };
   if (!isValidEmail(email)) {
-    return { ok: false, field: "email", error: "That doesn't look like a valid email address." };
+    return {
+      ok: false,
+      field: "email",
+      error: "That doesn't look like a valid email address.",
+    };
   }
 
   const draft = input.answers ?? {};
