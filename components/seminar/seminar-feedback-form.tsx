@@ -78,7 +78,7 @@ export function SeminarFeedbackForm() {
           Your feedback is with the team, and we&rsquo;ve sent a confirmation to
           your inbox. It shapes what we teach at the next seminar.
         </p>
-        <Link className="cd-submit" href="/">
+        <Link className="cd-submit" href="https://beautyuni.in/">
           Back to BeautyUni <Icon name="chevR" size={17} />
         </Link>
       </div>

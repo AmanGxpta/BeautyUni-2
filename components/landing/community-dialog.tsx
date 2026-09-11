@@ -76,7 +76,7 @@ const QUESTIONS: Question[] = [
     kind: "text",
     name: "implementTomorrow",
     label: "What would you implement in your salon tomorrow?",
-    placeholder: "The first change you'd make when you walk back in",
+    placeholder: "The first change you would make when you walk back in",
   },
   {
     kind: "choice",
