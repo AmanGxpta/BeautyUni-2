@@ -29,6 +29,21 @@ export function Home() {
     <>
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <section className="s-hero">
+        {/* Below 700px the collage stops carrying meaning — the speaker's face,
+            the book spines and the card's four lines are all smaller than they
+            are legible — so the phone gets the older hero back: this textured
+            backdrop and the capability index below the copy. Which of the two
+            shows is CSS's decision; the `sizes` on both keeps the other one's
+            pixels off the wire. */}
+        <div className="s-hero__bg" aria-hidden="true">
+          <Image
+            className="s-hero__texture"
+            src="/hero-texture.png"
+            alt=""
+            fill
+            sizes="(min-width: 701px) 1px, 100vw"
+          />
+        </div>
         <div className="s-wrap s-hero__grid">
           <div className="s-hero__copy">
             <p
@@ -80,6 +95,37 @@ export function Home() {
               Founded by <b>Roopa Ambekar</b> and <b>Vikas Vij</b>
             </p>
           </div>
+
+          {/* The other half of the mobile hero: an editorial table of contents
+              for the four capabilities, which reads at 400px in a way the
+              collage does not. */}
+          <div
+            className="s-index s-enter"
+            style={{ "--d": "260ms" } as React.CSSProperties}
+          >
+            <div className="s-index__card">
+              <div className="s-index__top">
+                <span>What we teach</span>
+                <span>Four capabilities</span>
+              </div>
+              <h2 className="s-index__title">
+                Education that goes <em>beyond technique</em>
+              </h2>
+              <div className="s-index__list">
+                {CAPABILITIES.map((cap) => (
+                  <Link className="s-index__row" key={cap.n} href="/about">
+                    <span>{cap.n}</span>
+                    <span>{cap.title}</span>
+                    <Ic n="arrowR" size={16} />
+                  </Link>
+                ))}
+              </div>
+              <p className="s-index__foot">
+                Craft, clients, people and business — brought together in one
+                place rather than taught as four unrelated subjects.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* The room and the three cut-outs standing in it, as one object.
@@ -99,7 +145,7 @@ export function Home() {
               alt=""
               fill
               preload
-              sizes="(max-width: 1080px) 152vw, 80vw"
+              sizes="(max-width: 700px) 1px, (max-width: 1080px) 152vw, 80vw"
             />
           </div>
           <div className="s-hero__wash" aria-hidden="true" />
@@ -111,7 +157,7 @@ export function Home() {
             width={994}
             height={1126}
             loading="eager"
-            sizes="(max-width: 860px) 66vw, 36vw"
+            sizes="(max-width: 700px) 1px, (max-width: 860px) 66vw, 36vw"
           />
           <Image
             className="s-hero__tile s-hero__tile--books s-enter"
@@ -121,7 +167,7 @@ export function Home() {
             width={1424}
             height={960}
             loading="eager"
-            sizes="(max-width: 860px) 48vw, 27vw"
+            sizes="(max-width: 700px) 1px, (max-width: 860px) 48vw, 27vw"
           />
           <Image
             className="s-hero__tile s-hero__tile--card s-enter"
@@ -131,7 +177,7 @@ export function Home() {
             width={795}
             height={1076}
             loading="eager"
-            sizes="(max-width: 860px) 32vw, 18vw"
+            sizes="(max-width: 700px) 1px, (max-width: 860px) 32vw, 18vw"
           />
         </div>
       </section>

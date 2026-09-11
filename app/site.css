@@ -705,6 +705,143 @@ body:has(.s-root) {
   width: 30.5%;
 }
 
+/* ── the mobile hero ───────────────────────────────────────────────
+   The hero the page had before the collage: a textured backdrop and the dark
+   capability index. Both are in the markup at every width and neither is shown
+   until the phone breakpoint takes the collage away — the two heroes are
+   alternatives, never a layer over each other. */
+.s-hero__bg,
+.s-index {
+  display: none;
+}
+.s-hero__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #f9f4ee;
+}
+.s-hero__texture {
+  object-fit: cover;
+  /* Off-centre: the artwork's subject sits right of the middle, and this is
+     where it stays in frame once the section is a phone's width. */
+  object-position: 64% center;
+}
+/* The copy runs over the picture here rather than beside it, so the backdrop is
+   washed down the way the collage's wash runs across. */
+.s-hero__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 253, 250, 0.94) 0%,
+    rgba(255, 253, 250, 0.82) 49%,
+    rgba(255, 253, 250, 0.42) 100%
+  );
+}
+
+/* the index card — an editorial "table of contents" for the four capabilities */
+.s-index {
+  position: relative;
+  justify-self: end;
+  width: min(100%, 510px);
+  margin: 76px 0 0;
+}
+.s-index__card {
+  position: relative;
+  background: rgba(24, 20, 17, 0.96);
+  color: var(--s-on-dark);
+  border-radius: 28px;
+  padding: 34px 35px 32px;
+  box-shadow:
+    0 26px 70px rgba(42, 28, 20, 0.24),
+    0 2px 7px rgba(42, 28, 20, 0.12);
+  overflow: hidden;
+}
+.s-index__card::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(199, 92, 60, 0.55),
+    rgba(199, 92, 60, 0) 70%
+  );
+}
+.s-index__top {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--s-on-dark-3);
+  font-weight: 600;
+}
+.s-index__title {
+  position: relative;
+  font-family: var(--s-serif);
+  font-size: 28px;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin: 24px 0;
+  font-weight: 500;
+}
+.s-index__title em {
+  color: #e8876a;
+  font-style: italic;
+  font-weight: 400;
+}
+.s-index__list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.s-index__row {
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--s-line-dark);
+  font-size: 15.5px;
+  font-weight: 500;
+  transition: padding 0.35s var(--s-ease-out);
+}
+.s-index__row:hover {
+  padding-left: 6px;
+}
+.s-index__row span:first-child {
+  font-family: var(--s-serif);
+  font-size: 15px;
+  color: #e8876a;
+  font-style: italic;
+}
+.s-index__row svg {
+  color: var(--s-on-dark-3);
+  transition:
+    color 0.25s,
+    transform 0.35s var(--s-ease-out);
+}
+.s-index__row:hover svg {
+  color: #e8876a;
+  transform: translateX(3px);
+}
+.s-index__foot {
+  position: relative;
+  margin-top: 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--s-line-dark);
+  font-size: 12.5px;
+  color: var(--s-on-dark-2);
+  line-height: 1.5;
+}
+
 /* ── marquee ───────────────────────────────────────────────────── */
 .s-marquee {
   background: var(--s-terra);
@@ -3055,9 +3192,36 @@ select.s-input {
     display: none;
   }
 }
+/* Below this the collage is too small to be read, so the page swaps heroes
+   rather than shrinking this one further. */
+@media (max-width: 700px) {
+  .s-hero {
+    display: block;
+    min-height: 0;
+    padding: calc(72px + 54px) 0 74px;
+  }
+  .s-hero__art {
+    display: none;
+  }
+  .s-hero__bg,
+  .s-index {
+    display: block;
+  }
+  .s-hero__copy {
+    max-width: none;
+  }
+  .s-index {
+    width: 100%;
+    max-width: 520px;
+    margin: 56px 0 0;
+  }
+}
 @media (max-width: 600px) {
   .s-nav__in {
     height: 70px;
+  }
+  .s-index__card {
+    padding: 26px 22px 24px;
   }
   .s-nav__logo img {
     height: 32px;
