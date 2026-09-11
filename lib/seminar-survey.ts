@@ -60,10 +60,7 @@ export type SeminarScaleField =
 
 /** The four questions answered in the respondent's own words. */
 export type SeminarTextField =
-  | "greatestImpact"
-  | "thirtyDayAction"
-  | "improvementIdeas"
-  | "testimonial";
+  "greatestImpact" | "thirtyDayAction" | "improvementIdeas" | "testimonial";
 
 /** Everything the form posts — also the keys an error is reported against. */
 export type SeminarField =
@@ -116,7 +113,7 @@ export const SEMINAR_QUESTIONS: readonly SeminarQuestion[] = [
     kind: "scale",
     name: "overallRating",
     label:
-      "Overall, how would you rate your experience at the two-day BeautyUni Seminar?",
+      "Overall, how would you rate your experience at the two-days seminar?",
     options: RATING_SCALE,
   },
   {
@@ -164,7 +161,8 @@ export const SEMINAR_QUESTIONS: readonly SeminarQuestion[] = [
   {
     kind: "text",
     name: "improvementIdeas",
-    label: "What would make the next BeautyUni Seminar even more valuable for you?",
+    label:
+      "What would make the next BeautyUni Seminar even more valuable for you?",
     hint: "Topics, speakers, formats, improvements — anything you'd like to see.",
     placeholder: "What you'd change, add, or do differently",
     optional: true,
@@ -173,12 +171,13 @@ export const SEMINAR_QUESTIONS: readonly SeminarQuestion[] = [
     kind: "text",
     name: "testimonial",
     label:
-      "Would you be comfortable sharing a short testimonial about your BeautyUni Seminar experience?",
+      "Would you be comfortable sharing a short testimonial about your seminar experience?",
     placeholder: "A line or two, in your own words",
     optional: true,
     consent: {
       name: "promoConsent",
-      label: "May we use your feedback on social media or promotional materials?",
+      label:
+        "May we use your feedback on social media or promotional materials?",
     },
   },
 ];
@@ -195,7 +194,9 @@ export const SEMINAR_TEXT_FIELDS = SEMINAR_QUESTIONS.filter(
 
 const SCALE_BY_FIELD = new Map<SeminarScaleField, readonly ScaleOption[]>(
   SEMINAR_QUESTIONS.flatMap((question) =>
-    question.kind === "scale" ? [[question.name, question.options] as const] : [],
+    question.kind === "scale"
+      ? [[question.name, question.options] as const]
+      : [],
   ),
 );
 
@@ -221,6 +222,8 @@ export function parseScale(
 export function isOptional(field: SeminarTextField): boolean {
   return SEMINAR_QUESTIONS.some(
     (question) =>
-      question.kind === "text" && question.name === field && question.optional === true,
+      question.kind === "text" &&
+      question.name === field &&
+      question.optional === true,
   );
 }

@@ -5,7 +5,7 @@ import { SeminarFeedbackForm } from "@/components/seminar/seminar-feedback-form"
 
 const title = "Seminar feedback · BeautyUni";
 const description =
-  "Tell us how the two-day BeautyUni Seminar landed — nine questions on the content, the speakers and the event, and what you'll put into practice next.";
+  "Tell us how the two-day seminar landed — nine questions on the content, the speakers and the event, and what you'll put into practice next.";
 
 export const metadata: Metadata = {
   // Absolute: the root layout's "%s · Rockstar" template is the landing
@@ -60,12 +60,11 @@ export default function Page() {
 
       <main className="sf-wrap">
         <div className="sf-head">
-          <div className="rs-eyebrow">BeautyUni 2-Day Seminar</div>
           <h1 className="rs-display sf-h1">Feedback Survey</h1>
           <p className="sf-lede">
-            Nine questions about the two days &mdash; what worked, what you&rsquo;ll
-            use, and what would make the next one better. It takes a few minutes,
-            and every answer is read.
+            Nine questions about the two days &mdash; what worked, what
+            you&rsquo;ll use, and what would make the next one better. It takes
+            a few minutes, and every answer is read.
           </p>
         </div>
 
