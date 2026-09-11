@@ -19,12 +19,16 @@ export function SiteFooter() {
     <footer className="s-footer">
       <div className="s-wrap s-footer__in">
         <div>
-          <Link className="s-footer__logo" href="/" aria-label="BeautyUni — home">
+          <Link
+            className="s-footer__logo"
+            href="/"
+            aria-label="BeautyUni — home"
+          >
             <Image
               src="/site/logo-footer.png"
               alt="BeautyUni"
-              width={320}
-              height={60}
+              width={1125}
+              height={240}
             />
           </Link>
           <p className="s-footer__tag">
@@ -59,14 +63,6 @@ export function SiteFooter() {
           <a href={CONTACT.phoneHref}>{CONTACT.phoneDisplay}</a>
           <span>Mumbai · London</span>
         </div>
-      </div>
-
-      <div className="s-wrap s-footer__bottom">
-        <span>&copy; 2026 BeautyUni. All rights reserved.</span>
-        <span>
-          Website designed by{" "}
-          <a href={`mailto:${CONTACT.designerEmail}`}>{CONTACT.designerEmail}</a>
-        </span>
       </div>
     </footer>
   );

@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 // colour scheme matters beyond the address bar: it is what makes the native
 // country picker and the scrollbars come back light instead of dark.
 export const viewport: Viewport = {
-  themeColor: "#FFFFFF",
+  themeColor: "#FCF7F3",
   colorScheme: "light",
 };
 
@@ -44,16 +44,15 @@ export default function Page() {
 
       <header className="sf-bar">
         <Link className="sf-brand" href="/" aria-label="BeautyUni — home">
-          {/* The supplied artwork carries its own generous whitespace, so the
-              box is taller than the wordmark and the negative margin takes
-              that padding back out of the bar. */}
+          {/* The same header wordmark the site nav carries, so arriving here
+              from a QR code lands on the brand the rest of the site wears. */}
           <Image
             className="bu-logo"
-            src="/beautyUni-website.png"
+            src="/site/logo-header.png"
             alt="BeautyUni"
-            width={2172}
-            height={724}
-            priority
+            width={1125}
+            height={240}
+            preload
           />
         </Link>
       </header>

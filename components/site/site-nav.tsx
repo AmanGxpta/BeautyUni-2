@@ -102,17 +102,17 @@ export function SiteNav({ onDark = false }: { onDark?: boolean }) {
               className="s-logo--ink"
               src="/site/logo-header.png"
               alt="BeautyUni"
-              width={320}
-              height={60}
-              priority
+              width={1125}
+              height={240}
+              preload
             />
             <Image
               className="s-logo--cream"
               src="/site/logo-footer.png"
               alt=""
-              width={320}
-              height={60}
-              priority
+              width={1125}
+              height={240}
+              preload
               aria-hidden="true"
             />
           </Link>

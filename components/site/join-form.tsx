@@ -107,7 +107,7 @@ export function JoinForm({ source = "join" }: { source?: string }) {
 
   return (
     <div ref={rootRef}>
-      <form className="s-form" action={action}>
+      <form className="s-form" id="join-form" action={action}>
         <input type="hidden" name="source" value={source} />
         {/* Honeypot: off-screen, unlabelled, and never announced. A bot fills
             it; a person never sees it. */}

@@ -33,13 +33,25 @@ export const viewport: Viewport = {
 export default function Page() {
   return (
     <Shell onDark>
-      <section className="s-pagehead s-pagehead--dark s-on-dark s-pod">
-        <div className="s-pagehead__bg" aria-hidden="true" />
-        <div className="s-wrap s-pagehead__grid">
-          <div>
+      <section className="s-pagehead s-pagehead--dark s-on-dark s-pod s-podhero">
+        <div className="s-pagehead__bg s-podhero__bg" aria-hidden="true">
+          <span className="s-podhero__shader s-podhero__shader--amber" />
+          <span className="s-podhero__shader s-podhero__shader--terra" />
+          <Image
+            className="s-podhero__wave"
+            src="/audio-wave.png"
+            alt=""
+            width={2172}
+            height={724}
+            priority
+          />
+        </div>
+
+        <div className="s-wrap s-pagehead__grid s-podhero__grid">
+          <div className="s-podhero__copy">
             <p className="s-eyebrow s-enter">The BeautyUni podcast</p>
             <h1
-              className="s-serif s-h1 s-enter"
+              className="s-serif s-h1 s-enter s-podhero__title"
               style={{ "--d": "100ms" } as React.CSSProperties}
             >
               From Passion <em>to Profit.</em>
@@ -58,7 +70,7 @@ export default function Page() {
               style={{ "--d": "260ms" } as React.CSSProperties}
             >
               <a
-                className="s-pill"
+                className="s-pill s-pill--primary"
                 href="https://www.youtube.com/@FromPassionToProfitPodcast"
                 target="_blank"
                 rel="noreferrer noopener"
@@ -71,21 +83,44 @@ export default function Page() {
                 Season 1 · {EPISODES.length} episodes
               </span>
             </div>
+
+            <dl
+              className="s-podhero__stats s-enter"
+              style={{ "--d": "340ms" } as React.CSSProperties}
+              aria-label="Podcast highlights"
+            >
+              <div>
+                <dt>3+</dt>
+                <dd>Seasons</dd>
+              </div>
+              <div>
+                <dt>50+</dt>
+                <dd>Conversations</dd>
+              </div>
+              <div>
+                <dt>100K+</dt>
+                <dd>Listeners</dd>
+              </div>
+              <div>
+                <dt>Real</dt>
+                <dd>Stories</dd>
+              </div>
+            </dl>
           </div>
 
           <div
-            className="s-pagehead__aside s-enter"
+            className="s-pagehead__aside s-podhero__art s-enter"
             style={{ "--d": "220ms" } as React.CSSProperties}
             aria-hidden="true"
           >
             <Image
-              className="s-pod__badge"
-              src="/site/fptp-badge.png"
+              className="s-podhero__still-life"
+              src="/podcast-hero-assets.png"
               alt=""
-              width={420}
-              height={420}
+              width={1372}
+              height={1146}
               priority
-              style={{ width: "min(220px, 60%)", marginLeft: "auto" }}
+              sizes="(max-width: 860px) 100vw, 58vw"
             />
           </div>
         </div>

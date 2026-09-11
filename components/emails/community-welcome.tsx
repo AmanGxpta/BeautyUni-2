@@ -116,12 +116,12 @@ export function CommunityWelcome({
                         <img
                           src={`${siteUrl}/email/beautyuni-logo.png`}
                           alt="BeautyUni"
-                          width={190}
-                          height={37}
+                          width={216}
+                          height={46}
                           style={{
                             display: "block",
-                            width: "190px",
-                            height: "37px",
+                            width: "216px",
+                            height: "46px",
                             border: 0,
                           }}
                         />

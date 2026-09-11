@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
 import { CtaBand } from "@/components/site/cta-band";
 import { Ic } from "@/components/site/icons";
 import { Shell } from "@/components/site/shell";
 import { CONTACT, PROGRAMME } from "@/lib/content";
+import seminarLandscape from "@/public/seminar-landscape.png";
 
 const title = "Programmes";
 const description =
@@ -41,13 +43,31 @@ const STRANDS = [
   },
 ];
 
+/** The four things that characterise every BeautyUni programme — the strip
+ *  that closes the hero, under the two calls to action. */
+const HERO_FEATURES = [
+  { i: "cap", l1: "Expert-led", l2: "sessions" },
+  { i: "users", l1: "Small,", l2: "select cohorts" },
+  { i: "case", l1: "Practical tools", l2: "& frameworks" },
+  { i: "bars", l1: "Real-world", l2: "application" },
+] as const;
+
 export default function Page() {
   return (
     <Shell>
-      <section className="s-pagehead">
-        <div className="s-pagehead__bg" aria-hidden="true" />
-        <div className="s-wrap s-pagehead__grid">
-          <div>
+      <section className="s-pagehead s-pagehead--programmes">
+        <div className="s-pagehead__bg" aria-hidden="true">
+          <Image
+            className="s-pagehead__image"
+            src={seminarLandscape}
+            alt=""
+            fill
+            preload
+            sizes="100vw"
+          />
+        </div>
+        <div className="s-wrap s-pagehead__grid s-pagehead__grid--programmes">
+          <div className="s-pagehead__content">
             <p className="s-eyebrow s-enter">Programmes</p>
             <h1
               className="s-serif s-h1 s-enter"
@@ -62,27 +82,46 @@ export default function Page() {
               Programmes that combine technical education with the consultation,
               communication and career skills that turn ability into a business.
             </p>
-          </div>
-          <div
-            className="s-pagehead__aside s-enter"
-            style={{ "--d": "240ms" } as React.CSSProperties}
-          >
-            <div className="s-stat">
-              <span className="s-stat__n">
-                <Ic n="cal" size={26} />
-              </span>
-              <span className="s-stat__l">
-                <b>{PROGRAMME.dates}</b>
-                <br />
-                {PROGRAMME.city}, India
-              </span>
+            <div
+              className="s-pagehead__actions s-enter"
+              style={{ "--d": "240ms" } as React.CSSProperties}
+            >
+              <a
+                className="s-btn s-btn--lg"
+                href="#rock-star-success-system"
+              >
+                View Upcoming Dates
+                <span className="s-btn__arr">
+                  <Ic n="arrowR" size={17} />
+                </span>
+              </a>
+              <a
+                className="s-btn s-btn--lg s-btn--ghost"
+                href={`mailto:${CONTACT.email}?subject=BeautyUni%20programmes%20—%20enquiry`}
+              >
+                Speak to our team
+                <span className="s-btn__arr">
+                  <Ic n="arrowR" size={17} />
+                </span>
+              </a>
             </div>
-            <div className="s-stat">
-              <span className="s-stat__n">50</span>
-              <span className="s-stat__l">
-                Places only, across the two days
-              </span>
-            </div>
+            <ul
+              className="s-feats s-enter"
+              style={{ "--d": "320ms" } as React.CSSProperties}
+            >
+              {HERO_FEATURES.map((f) => (
+                <li className="s-feat" key={f.l1 + f.l2}>
+                  <span className="s-feat__ic">
+                    <Ic n={f.i} size={23} />
+                  </span>
+                  <span className="s-feat__t">
+                    {f.l1}
+                    <br />
+                    {f.l2}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
@@ -253,15 +292,14 @@ export default function Page() {
       </section>
 
       <CtaBand
-        eyebrow="Register your interest"
-        title={
-          <>
-            Fifty places. <em>Two days.</em>
-          </>
-        }
-        body="Tell us who you are and the team will be in touch with the details, the agenda and how to confirm a place."
-        primary={{ href: "/join?p=rock-star", label: "Register your interest" }}
-        secondary={{ href: "/podcast", label: "Hear the podcast" }}
+        eyebrow="Get involved"
+        title="Be part of the next cohort."
+        body="Share a few details and we’ll reach out with upcoming programme dates, eligibility and next steps."
+        primary={{
+          href: "/join?p=rock-star#join-form",
+          label: "Apply for a programme",
+        }}
+        secondary={{ href: "/podcast", label: "Explore our podcast" }}
       />
     </Shell>
   );

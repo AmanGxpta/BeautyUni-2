@@ -12,14 +12,12 @@ export const CONTACT = {
   email: "roopa.ambekar@icloud.com",
   phoneDisplay: "+91 87928 37676",
   phoneHref: "tel:+918792837676",
-  designerEmail: "trust.yashira@gmail.com",
 } as const;
 
 export const NAV_LINKS = [
   { href: "/about", label: "About" },
   { href: "/podcast", label: "Podcast" },
   { href: "/programmes", label: "Programmes" },
-  { href: "/join", label: "Join" },
 ] as const;
 
 /**
@@ -167,7 +165,11 @@ export const PROGRAMME = {
   quote:
     "Technical skill opens the door, but communication builds the relationship. When hairdressers are confident in both their craft and client conversations, they build trust and create careers with real longevity.",
   quoteBy: "Reginald Laws",
-  equation: ["Technical capability", "Communication", "Professional development"],
+  equation: [
+    "Technical capability",
+    "Communication",
+    "Professional development",
+  ],
 } as const;
 
 export type Founder = {

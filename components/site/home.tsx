@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { CtaBand } from "./cta-band";
 import { EpisodeItem } from "./episode";
-import { Ic, Seal } from "./icons";
+import { Ic } from "./icons";
 import {
   AUDIENCE,
   CAPABILITIES,
@@ -29,7 +29,16 @@ export function Home() {
     <>
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <section className="s-hero">
-        <div className="s-hero__bg" aria-hidden="true" />
+        <div className="s-hero__bg" aria-hidden="true">
+          <Image
+            className="s-hero__image"
+            src="/hero-texture.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+          />
+        </div>
         <div className="s-wrap s-hero__grid">
           <div>
             <p className="s-eyebrow s-enter" style={{ "--d": "60ms" } as React.CSSProperties}>
@@ -79,11 +88,9 @@ export function Home() {
             </p>
           </div>
 
-          {/* The contents card: the four capabilities as an index, so the hero
-              states what the platform teaches instead of repeating the
-              headline in a picture. */}
+          {/* The contents card sits over the product plinth in the supplied
+              hero artwork, turning the image into a useful editorial index. */}
           <div className="s-index s-enter" style={{ "--d": "260ms" } as React.CSSProperties}>
-            <Seal className="s-index__stamp" />
             <div className="s-index__card">
               <div className="s-index__top">
                 <span>What we teach</span>
@@ -106,19 +113,6 @@ export function Home() {
                 place rather than taught as four unrelated subjects.
               </p>
             </div>
-
-            <Link className="s-index__chip" href="/programmes">
-              <span className="s-index__chip-date">
-                2&ndash;3
-                <span className="s-index__chip-m">Sept</span>
-              </span>
-              <span>
-                <span className="s-index__chip-t">Rock Star Success System</span>
-                <span className="s-index__chip-s">
-                  Mumbai &middot; 2026 &middot; with Professional Beauty India
-                </span>
-              </span>
-            </Link>
           </div>
         </div>
       </section>
