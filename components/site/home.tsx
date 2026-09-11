@@ -29,19 +29,12 @@ export function Home() {
     <>
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <section className="s-hero">
-        <div className="s-hero__bg" aria-hidden="true">
-          <Image
-            className="s-hero__image"
-            src="/hero-texture.png"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-          />
-        </div>
         <div className="s-wrap s-hero__grid">
-          <div>
-            <p className="s-eyebrow s-enter" style={{ "--d": "60ms" } as React.CSSProperties}>
+          <div className="s-hero__copy">
+            <p
+              className="s-eyebrow s-enter"
+              style={{ "--d": "60ms" } as React.CSSProperties}
+            >
               Beauty · Wellness · Medaesthetics
             </p>
             <h1
@@ -87,33 +80,59 @@ export function Home() {
               Founded by <b>Roopa Ambekar</b> and <b>Vikas Vij</b>
             </p>
           </div>
+        </div>
 
-          {/* The contents card sits over the product plinth in the supplied
-              hero artwork, turning the image into a useful editorial index. */}
-          <div className="s-index s-enter" style={{ "--d": "260ms" } as React.CSSProperties}>
-            <div className="s-index__card">
-              <div className="s-index__top">
-                <span>What we teach</span>
-                <span>Four capabilities</span>
-              </div>
-              <h2 className="s-index__title">
-                Education that goes <em>beyond technique</em>
-              </h2>
-              <div className="s-index__list">
-                {CAPABILITIES.map((cap) => (
-                  <Link className="s-index__row" key={cap.n} href="/about">
-                    <span>{cap.n}</span>
-                    <span>{cap.title}</span>
-                    <Ic n="arrowR" size={16} />
-                  </Link>
-                ))}
-              </div>
-              <p className="s-index__foot">
-                Craft, clients, people and business — brought together in one
-                place rather than taught as four unrelated subjects.
-              </p>
-            </div>
+        {/* The room and the three cut-outs standing in it, as one object.
+            The photograph is *inside* the stage rather than behind the section,
+            which is what keeps the pieces on the floor: the box carries the
+            room's own 3:2, so the plinth lands at a fixed fraction of the stage
+            and every tile is anchored by its bottom — its contact point —
+            rather than its top. Sized apart, the two scale differently and the
+            floor slides out from under the artwork as the window changes.
+            After the copy in the DOM because below 1080px the stage leaves the
+            corner and becomes the block that follows it. */}
+        <div className="s-hero__art">
+          <div className="s-hero__photo" aria-hidden="true">
+            <Image
+              className="s-hero__image"
+              src="/homepage-hero-section/background.png"
+              alt=""
+              fill
+              preload
+              sizes="(max-width: 1080px) 152vw, 80vw"
+            />
           </div>
+          <div className="s-hero__wash" aria-hidden="true" />
+          <Image
+            className="s-hero__tile s-hero__tile--speaker s-enter"
+            style={{ "--d": "240ms" } as React.CSSProperties}
+            src="/homepage-hero-section/speaker-tile.png"
+            alt="An educator addressing a seated audience in front of a wall reading “Better professionals, a brighter industry”."
+            width={994}
+            height={1126}
+            loading="eager"
+            sizes="(max-width: 860px) 66vw, 36vw"
+          />
+          <Image
+            className="s-hero__tile s-hero__tile--books s-enter"
+            style={{ "--d": "380ms" } as React.CSSProperties}
+            src="/homepage-hero-section/books-brushes.png"
+            alt="A stack of four books spined Skills, People, Opportunities and A Brighter Industry, beside a pot of make-up brushes."
+            width={1424}
+            height={960}
+            loading="eager"
+            sizes="(max-width: 860px) 48vw, 27vw"
+          />
+          <Image
+            className="s-hero__tile s-hero__tile--card s-enter"
+            style={{ "--d": "500ms" } as React.CSSProperties}
+            src="/homepage-hero-section/white-info-tile.png"
+            alt="Technical excellence · Client confidence · Leadership growth · Real-world business skills."
+            width={795}
+            height={1076}
+            loading="eager"
+            sizes="(max-width: 860px) 32vw, 18vw"
+          />
         </div>
       </section>
 
@@ -147,7 +166,8 @@ export function Home() {
           <div data-reveal>
             <h2 className="s-serif s-manifesto__quote">
               Much of industry training is built around products, trends and
-              one-off demonstrations. BeautyUni takes a <em>broader approach</em>.
+              one-off demonstrations. BeautyUni takes a{" "}
+              <em>broader approach</em>.
             </h2>
             <div className="s-manifesto__body">
               <p>
@@ -231,8 +251,10 @@ export function Home() {
                 <Ic n="users" size={20} />
               </span>
               <p>
-                <b>Particularly relevant to independent salon and skin-clinic
-                owners</b>{" "}
+                <b>
+                  Particularly relevant to independent salon and skin-clinic
+                  owners
+                </b>{" "}
                 who have to balance technical quality, people, retention,
                 operations and growth simultaneously.
               </p>
@@ -329,9 +351,7 @@ export function Home() {
             </div>
 
             <div className="s-prog__copy">
-              <p className="s-body s-body--lg">
-                {PROGRAMME.intro}
-              </p>
+              <p className="s-body s-body--lg">{PROGRAMME.intro}</p>
               <dl className="s-facts">
                 <div className="s-fact">
                   <dt>Dates</dt>
