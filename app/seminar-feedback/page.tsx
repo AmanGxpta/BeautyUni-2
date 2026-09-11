@@ -60,12 +60,7 @@ export default function Page() {
 
       <main className="sf-wrap">
         <div className="sf-head">
-          <h1 className="rs-display sf-h1">Feedback Survey</h1>
-          <p className="sf-lede">
-            Nine questions about the two days &mdash; what worked, what
-            you&rsquo;ll use, and what would make the next one better. It takes
-            a few minutes, and every answer is read.
-          </p>
+          <h1 className="rs-display sf-h1">Tell Us How We Did</h1>
         </div>
 
         <SeminarFeedbackForm />
