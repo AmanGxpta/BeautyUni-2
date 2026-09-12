@@ -109,7 +109,7 @@ export async function sendWaitlistConfirmation(
  *
  * Its own email rather than the waitlist's: the two go to different people at
  * different moments, and a waitlist welcome is the wrong receipt for someone
- * who just answered nine questions about a seminar they already attended.
+ * who just answered ten questions about a seminar they already attended.
  *
  * Best-effort like everything else here — the response is committed before we
  * are called, so a Resend outage must not turn a saved response into an error.

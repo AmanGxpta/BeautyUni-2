@@ -303,6 +303,27 @@ body{margin:0;background:var(--paper);color:var(--ink)}
 .sf-opt input:focus-visible+span{box-shadow:0 0 0 2px var(--clay)}
 .cd-q-bad .sf-opt span{box-shadow:inset 0 0 0 1.5px var(--clay-deep)}
 
+/* The named educators, one row each, rated 1-5. The buttons are the same
+   .sf-opt chrome as the worded scales, so the .bu palette and the error
+   treatment above already cover them; only the row and the number sizing are
+   new. Five fixed columns rather than auto-fit — a single digit would
+   otherwise let the last row wrap to a different width than the one above. */
+/* No rule between rows: a border on the fieldset is drawn *through* the
+   <legend> that names the educator, so a separator here reads as a line
+   sticking out beside someone's name. The rows are told apart by the gap and
+   by the name itself, which is the heaviest text in the block. */
+.sf-eds{display:flex;flex-direction:column;gap:26px}
+.sf-ed{display:block}
+.sf-ed-name{display:block;padding:0;margin:0 0 10px;font-family:var(--ui);font-size:14.5px;font-weight:600;line-height:1.35;color:var(--ink)}
+/* The written half of each educator's answer. Lighter than a question label:
+   it is asked once per educator and reads as part of that row, not as five
+   more questions. */
+.sf-ed-notes-l{display:block;margin:12px 0 7px;font-size:13.5px;line-height:1.5;color:var(--ink-2)}
+.sf-ed .sf-ed-notes{min-height:60px;font-size:15px;padding:11px 14px}
+.sf-ed-role{display:block;margin-top:2px;font-size:12.5px;font-weight:400;line-height:1.4;color:var(--ink-3)}
+.sf-scale-num{grid-template-columns:repeat(5,1fr)}
+.sf-scale-num .sf-opt span{min-height:46px;font-size:15px;font-variant-numeric:tabular-nums}
+
 /* Q9's permission, hung off the testimonial box it belongs to. */
 .sf-consent{margin-top:14px;padding-left:14px;border-left:2px solid var(--line-2)}
 .sf-consent-t{padding:0;margin:0 0 10px;font-size:13.5px;line-height:1.5;color:var(--ink-2)}
@@ -629,6 +650,8 @@ body:has(.bu){background:#FCF7F3}
      are already pinned to 16px by the .cd-q rule above, which is what stops
      iOS zooming the page in on focus. */
   .sf-opt span{font-size:13.5px;min-height:56px}
+  .sf-scale-num{gap:6px}
+  .sf-scale-num .sf-opt span{min-height:48px;font-size:15px}
   .sf-consent{padding-left:12px}
   .sf-foot{margin:0 -18px;padding:16px 18px calc(18px + env(safe-area-inset-bottom));border-radius:0}
   .sf-done{padding:44px 22px 38px}

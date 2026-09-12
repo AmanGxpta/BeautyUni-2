@@ -1,8 +1,4 @@
-import {
-  readSeminarAnswerDraft,
-  recordSeminarFeedback,
-  type SeminarAnswers,
-} from "@/lib/seminar-feedback";
+import { readSeminarAnswerDraft, recordSeminarFeedback } from "@/lib/seminar-feedback";
 
 /**
  * POST /api/seminar-feedback — programmatic submission of the BeautyUni 2-Day
@@ -24,6 +20,15 @@ import {
  *   eventRating   required — one of that question's own scale values, listed
  *                 in `lib/seminar-survey.ts`. Checked per question, so a
  *                 confidence value cannot be filed as an overall rating.
+ *   educatorFeedback  required — an object keyed by educator slug:
+ *                 `{"reginald-laws": {"rating": 5, "comment": "…"}}`. The
+ *                 roster is `SEMINAR_EDUCATORS` in `lib/seminar-survey.ts`
+ *                 and every educator on it must be rated 1-5; `comment` is
+ *                 optional and may be omitted or null. A bare number is
+ *                 accepted in place of the object when there is nothing to
+ *                 say: `{"reginald-laws": 5}`. A form-encoded body can send
+ *                 them flat instead — `educator_<slug>` and
+ *                 `educator_<slug>_notes` — which is what the page posts.
  *   greatestImpact, thirtyDayAction   required — free text
  *   improvementIdeas, testimonial     optional — free text
  *   promoConsent                      optional — `true`/`false`, or the
@@ -56,7 +61,7 @@ export async function POST(request: Request) {
     countryIso: read("countryIso"),
     phone: read("phone"),
     email: read("email"),
-    answers: readSeminarAnswerDraft((field: keyof SeminarAnswers) => read(field)),
+    answers: readSeminarAnswerDraft(read),
     honeypot: read("company"),
   });
 

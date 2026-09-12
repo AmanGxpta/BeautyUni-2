@@ -5,7 +5,7 @@ import { SeminarFeedbackForm } from "@/components/seminar/seminar-feedback-form"
 
 const title = "Seminar feedback · BeautyUni";
 const description =
-  "Tell us how the two-days seminar landed: nine questions on the content, the speakers and the event, and what you'll put into practice next.";
+  "Tell us how the two-days seminar landed: ten questions on the content, the educators and the event, and what you'll put into practice next.";
 
 export const metadata: Metadata = {
   // Absolute: the root layout's "%s · Rockstar" template is the landing

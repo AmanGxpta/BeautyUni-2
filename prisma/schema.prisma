@@ -75,7 +75,7 @@ model WaitlistSignup {
 ///
 /// Its own table rather than more columns on `WaitlistSignup`: the two forms
 /// ask different questions of different people at different moments, and
-/// folding them together would give every waitlist row nine NULL survey
+/// folding them together would give every waitlist row ten NULL survey
 /// answers and every response seven NULL waitlist answers. Keeping them apart
 /// also lets this table hold its required answers NOT NULL — something
 /// `WaitlistSignup` cannot do, because it has history that predates its own
@@ -112,18 +112,45 @@ model SeminarFeedback {
   applyConfidence  String @map("apply_confidence")
   /// Q5 — one action, change, or strategy for the next 30 days.
   thirtyDayAction  String @map("thirty_day_action")
-  /// Q6 — the speakers and facilitators.
+  /// Q6 — the speakers and facilitators, as a group.
   speakerRating    String @map("speaker_rating")
-  /// Q7 — the event: venue, timing, registration, hospitality, organisation.
+
+  /// Q7 — each named educator, rated 1-5 and commented on.
+  ///
+  /// A JSONB map keyed by the educator's slug, holding both halves of what
+  /// was asked about that person:
+  ///   {"reginald-laws": {"rating": 5, "comment": "Clear, and…"}}
+  ///
+  /// Not a column per educator. The roster lives in `lib/seminar-survey.ts`
+  /// and changes between seminars; columns per name would mean a migration
+  /// before a new educator could be asked about, and a table carrying columns
+  /// that only ever applied to one event. Keeping the rating and the comment
+  /// in one entry also means reading a response never has to pair a number in
+  /// one column with the words in another.
+  ///
+  /// `comment` is null when it was left blank — it is optional, for the same
+  /// reason Q9 is.
+  ///
+  /// It still aggregates without naming anyone:
+  ///   SELECT key AS educator, avg((value->>'rating')::int) AS rating
+  ///   FROM seminar_feedback, jsonb_each(educator_feedback)
+  ///   GROUP BY key;
+  ///
+  /// NOT NULL, defaulting to `{}` — which is what the responses collected
+  /// before this question existed hold, and it reads correctly: nobody was
+  /// rated, because nobody was asked.
+  educatorFeedback Json   @default("{}") @map("educator_feedback")
+
+  /// Q8 — the event: venue, timing, registration, hospitality, organisation.
   eventRating      String @map("event_rating")
 
-  /// Q8 — what would make the next seminar more valuable. Optional: a
+  /// Q9 — what would make the next seminar more valuable. Optional: a
   /// required "any suggestions?" collects "na", not suggestions.
   improvementIdeas String?  @map("improvement_ideas")
-  /// Q9 — a short testimonial. Optional, because the question itself asks
+  /// Q10 — a short testimonial. Optional, because the question itself asks
   /// whether they would be *comfortable* giving one.
   testimonial      String?
-  /// Q9's follow-on — may we use this in social or promotional material?
+  /// Q10's follow-on — may we use this in social or promotional material?
   ///
   /// Nullable, and NULL means they didn't say. That is not the same as "no"
   /// and must never collapse into it: this is the column anyone would be

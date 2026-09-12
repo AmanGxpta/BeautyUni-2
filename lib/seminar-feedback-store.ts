@@ -5,7 +5,7 @@
  * `waitlist_signups`: the two forms ask different questions of different
  * people at different moments, and folding them together would mean a
  * respondent's row carries seven NULL waitlist answers and a waitlist row
- * carries nine NULL survey answers. Separate tables also let this one hold its
+ * carries ten NULL survey answers. Separate tables also let this one hold its
  * required answers as NOT NULL, which the waitlist table cannot — it has
  * history that predates its own questions.
  */

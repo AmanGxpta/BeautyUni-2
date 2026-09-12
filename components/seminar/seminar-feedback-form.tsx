@@ -6,7 +6,13 @@ import { Icon } from "@/components/ui/icon";
 import { submitSeminarFeedback } from "@/app/actions/seminar-feedback";
 import { initialSeminarFeedbackState } from "@/lib/seminar-feedback-state";
 import { COUNTRIES, DEFAULT_COUNTRY_ISO } from "@/lib/countries";
-import { SEMINAR_QUESTIONS, type SeminarField } from "@/lib/seminar-survey";
+import {
+  educatorField,
+  educatorNotesField,
+  EDUCATOR_RATING_POINTS,
+  SEMINAR_QUESTIONS,
+  type SeminarField,
+} from "@/lib/seminar-survey";
 
 /**
  * The BeautyUni 2-Day Seminar Feedback Survey.
@@ -17,7 +23,7 @@ import { SEMINAR_QUESTIONS, type SeminarField } from "@/lib/seminar-survey";
  *
  * The field chrome is the `.cd-*` control layer the community dialog
  * introduced (see `app/globals.css`): same inputs, same error treatment, same
- * country picker. Only the page frame and the five-point scale are new.
+ * country picker. Only the page frame and the five-point scales are new.
  */
 
 /** The contact block above the numbered questions. Not part of the survey's numbering. */
@@ -201,7 +207,78 @@ export function SeminarFeedbackForm() {
                 className={"cd-q" + (invalid ? " cd-q-bad" : "")}
                 key={question.name}
               >
-                {question.kind === "scale" ? (
+                {question.kind === "educators" ? (
+                  <>
+                    {/* The question's own label is a plain heading: the
+                        <legend>s belong to the per-educator radio groups
+                        below, which are the actual controls. */}
+                    <div className="cd-label">
+                      <span className="cd-num">{number}</span>
+                      <span className="sf-label-text">{question.label}</span>
+                    </div>
+                    <p className="sf-hint">{question.hint}</p>
+
+                    <div className="sf-eds">
+                      {question.educators.map((educator) => {
+                        const field = educatorField(educator.slug);
+                        const notes = educatorNotesField(educator.slug);
+                        // Marked on the row that is missing a rating, not on
+                        // the block: five identical rows all going red says
+                        // nothing about which one was skipped. The class goes
+                        // on the scale rather than the whole row, so the
+                        // optional comment box beside it is not marked for an
+                        // answer it never asked for.
+                        const bad =
+                          state.status === "error" && state.field === field;
+                        return (
+                          <fieldset className="cd-fieldset sf-ed" key={educator.slug}>
+                            <legend className="sf-ed-name">
+                              {educator.name}
+                              {educator.role && (
+                                <span className="sf-ed-role">{educator.role}</span>
+                              )}
+                            </legend>
+                            <div className={bad ? "cd-q-bad" : undefined}>
+                              <div className="sf-scale sf-scale-num">
+                                {EDUCATOR_RATING_POINTS.map((point, position) => (
+                                  <label className="sf-opt" key={point}>
+                                    <input
+                                      type="radio"
+                                      name={field}
+                                      value={String(point)}
+                                      aria-label={`${educator.name}: ${point} out of 5`}
+                                      required={position === 0}
+                                      defaultChecked={
+                                        defaultValue(field) === String(point)
+                                      }
+                                    />
+                                    <span>{point}</span>
+                                  </label>
+                                ))}
+                              </div>
+                              {bad && (
+                                <p className="cd-err" id={`sf-err-${field}`} role="alert">
+                                  {state.message}
+                                </p>
+                              )}
+                            </div>
+                            <label className="sf-ed-notes-l" htmlFor={`sf-${notes}`}>
+                              {question.notesLabel}
+                            </label>
+                            <textarea
+                              className="sf-ed-notes"
+                              id={`sf-${notes}`}
+                              name={notes}
+                              rows={2}
+                              placeholder={question.notesPlaceholder}
+                              defaultValue={defaultValue(notes)}
+                            />
+                          </fieldset>
+                        );
+                      })}
+                    </div>
+                  </>
+                ) : question.kind === "scale" ? (
                   // A radio group's label has to be a <legend>, not a <label>
                   // — there is no single input for a <label> to point at.
                   <fieldset className="cd-fieldset">

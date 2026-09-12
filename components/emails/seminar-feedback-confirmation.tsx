@@ -4,7 +4,7 @@
  * The receipt for a response to the two-day seminar survey. It replaces the
  * waitlist confirmation on that path: the two are sent to different people at
  * different moments, and "You're on the Rockstar waitlist" is the wrong thing
- * to land in the inbox of someone who just answered nine questions about a
+ * to land in the inbox of someone who just answered ten questions about a
  * seminar they already attended.
  *
  * Written as email HTML, not app HTML: a table skeleton with inline styles on

@@ -11,7 +11,11 @@ import {
 } from "./contact";
 import { findCountry, type Country } from "./countries";
 import {
+  educatorField,
+  educatorNotesField,
+  parseEducatorRating,
   parseScale,
+  SEMINAR_EDUCATORS,
   SEMINAR_QUESTIONS,
   SEMINAR_SCALE_FIELDS,
   SEMINAR_TEXT_FIELDS,
@@ -49,16 +53,33 @@ export type SeminarAnswers = {
   applyConfidence: string;
   /** Q5 — one action they'll implement within 30 days. */
   thirtyDayAction: string;
-  /** Q6 — the speakers and facilitators. */
+  /** Q6 — the speakers and facilitators, as a group. */
   speakerRating: string;
-  /** Q7 — the event itself: venue, timing, hospitality, organisation. */
+  /**
+   * Q7 — each named educator: a 1-5 rating and what the respondent had to say
+   * about them, keyed by the educator's `slug`.
+   *
+   * A map rather than a column per educator: the roster in
+   * `lib/seminar-survey.ts` is the list of people being asked about, and it
+   * changes between seminars. Both halves of one educator's answer live in
+   * one entry, so reading a response never has to join a rating in one column
+   * to a comment in another.
+   *
+   * Every educator on the roster has a rating by the time this exists — the
+   * survey requires all of them — so a missing key means the roster changed
+   * after the response came in, not that someone skipped a row. `comment` is
+   * `null` when it was left blank, which is expected: it is optional, for the
+   * same reason Q9 is.
+   */
+  educatorFeedback: Record<string, EducatorAnswer>;
+  /** Q8 — the event itself: venue, timing, hospitality, organisation. */
   eventRating: string;
-  /** Q8 — what would make the next seminar more valuable. Optional. */
+  /** Q9 — what would make the next seminar more valuable. Optional. */
   improvementIdeas: string | null;
-  /** Q9 — a short testimonial. Optional. */
+  /** Q10 — a short testimonial. Optional. */
   testimonial: string | null;
   /**
-   * Q9's follow-on — may we quote this in social or promotional material?
+   * Q10's follow-on — may we quote this in social or promotional material?
    *
    * `null` means they didn't say, which is not the same as "no" and must never
    * collapse into it: this is the field someone would be asked to point at if
@@ -70,8 +91,16 @@ export type SeminarAnswers = {
 /** Answers as they arrive off a form — anything may still be missing. */
 export type SeminarAnswerDraft = Partial<Record<keyof SeminarAnswers, unknown>>;
 
+/** What one educator was given: a rating on the scale, and optionally words. */
+export type EducatorAnswer = {
+  /** A whole number, 1-5. */
+  rating: number;
+  /** What they liked and what could be improved, or `null` if left blank. */
+  comment: string | null;
+};
+
 /**
- * Pulls the nine answers and the consent out of whatever shape they arrived
+ * Pulls the ten answers and the consent out of whatever shape they arrived
  * in — a `FormData`, a parsed JSON body, a `URLSearchParams`.
  *
  * Shared by the Server Action and the POST route so the two can't disagree
@@ -82,12 +111,48 @@ export type SeminarAnswerDraft = Partial<Record<keyof SeminarAnswers, unknown>>;
  * which both paths reach through `recordSeminarFeedback`.
  */
 export function readSeminarAnswerDraft(
-  get: (field: keyof SeminarAnswers) => unknown,
+  get: (field: string) => unknown,
 ): SeminarAnswerDraft {
   const draft: SeminarAnswerDraft = {};
   for (const field of SEMINAR_SCALE_FIELDS) draft[field] = get(field);
   for (const field of SEMINAR_TEXT_FIELDS) draft[field] = get(field);
+  draft.educatorFeedback = readEducatorDraft(get);
   draft.promoConsent = get("promoConsent");
+  return draft;
+}
+
+/**
+ * The educator answers, read in both of the shapes they legitimately arrive
+ * in: a form posts flat fields per educator (`educator_reginald-laws` and
+ * `educator_reginald-laws_notes`), while a JSON body naturally sends one
+ * nested object keyed by slug. Taking the flat fields first means the page —
+ * the only caller that can post both — always wins with what the person
+ * actually clicked and typed.
+ *
+ * Values are left exactly as they came; `readSeminarAnswers` is what decides
+ * whether a rating is on the scale.
+ */
+function readEducatorDraft(get: (field: string) => unknown): Record<string, unknown> {
+  const nested = get("educatorFeedback");
+  const byslug =
+    typeof nested === "object" && nested !== null
+      ? (nested as Record<string, unknown>)
+      : undefined;
+
+  const draft: Record<string, unknown> = {};
+  for (const educator of SEMINAR_EDUCATORS) {
+    const sent = byslug?.[educator.slug];
+    // A JSON caller may send either `{"reginald-laws": 5}` or the fuller
+    // `{"reginald-laws": {rating: 5, comment: "…"}}`; both mean the same
+    // thing, and neither should have to know which one this reader prefers.
+    const nestedObject =
+      typeof sent === "object" && sent !== null ? (sent as Record<string, unknown>) : undefined;
+
+    draft[educator.slug] = {
+      rating: get(educatorField(educator.slug)) ?? nestedObject?.rating ?? sent,
+      comment: get(educatorNotesField(educator.slug)) ?? nestedObject?.comment,
+    };
+  }
   return draft;
 }
 
@@ -123,6 +188,40 @@ export function readSeminarAnswers(
   const answers: Partial<SeminarAnswers> = {};
 
   for (const question of SEMINAR_QUESTIONS) {
+    if (question.kind === "educators") {
+      // Reported per educator rather than per question, so the error lands on
+      // the row that is missing a rating instead of the top of a block of
+      // five identical ones.
+      const source = get("educatorFeedback");
+      const byslug =
+        typeof source === "object" && source !== null
+          ? (source as Record<string, unknown>)
+          : {};
+
+      const feedback: Record<string, EducatorAnswer> = {};
+      for (const educator of question.educators) {
+        const sent = byslug[educator.slug];
+        const given =
+          typeof sent === "object" && sent !== null
+            ? (sent as Record<string, unknown>)
+            : { rating: sent, comment: undefined };
+
+        const rating = parseEducatorRating(given.rating);
+        if (rating === undefined) {
+          return {
+            ok: false,
+            field: educatorField(educator.slug),
+            error: `Give ${educator.name} a rating from 1 to 5.`,
+          };
+        }
+        // The comment is optional for the same reason Q9 is: a required box
+        // under every educator collects "good", five times over.
+        feedback[educator.slug] = { rating, comment: parseAnswer(given.comment) };
+      }
+      answers.educatorFeedback = feedback;
+      continue;
+    }
+
     if (question.kind === "scale") {
       const value = parseScale(question.name, get(question.name));
       if (value === undefined) {
@@ -163,7 +262,7 @@ export function readSeminarAnswers(
  * The one entry point for a seminar feedback submission.
  *
  * Same shape as `joinWaitlist` and same guarantees: contact details first, in
- * the order the form asks for them, then the nine questions. The client marks
+ * the order the form asks for them, then the ten questions. The client marks
  * the required ones `required` too, but that only saves a round trip — this is
  * the check that counts.
  */

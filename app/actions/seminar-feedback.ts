@@ -2,6 +2,9 @@
 
 import { readSeminarAnswerDraft, recordSeminarFeedback } from "@/lib/seminar-feedback";
 import {
+  educatorField,
+  educatorNotesField,
+  SEMINAR_EDUCATORS,
   SEMINAR_SCALE_FIELDS,
   SEMINAR_TEXT_FIELDS,
   type SeminarField,
@@ -11,16 +14,28 @@ import type {
   SeminarValues,
 } from "@/lib/seminar-feedback-state";
 
-/** Every field the survey posts, in the order it asks for them. */
-const FIELDS = [
+/**
+ * Every field the survey posts, in the order it asks for them.
+ *
+ * Built from the survey itself, the educator roster included, so a question
+ * added there is echoed back on a failed submit without anyone remembering to
+ * add it here — the failure mode being a person who fixes their phone number
+ * and finds five educator ratings, and what they wrote about each of them,
+ * blanked.
+ */
+const FIELDS: readonly SeminarField[] = [
   "name",
   "countryIso",
   "phone",
   "email",
   ...SEMINAR_SCALE_FIELDS,
   ...SEMINAR_TEXT_FIELDS,
+  ...SEMINAR_EDUCATORS.flatMap((educator) => [
+    educatorField(educator.slug),
+    educatorNotesField(educator.slug),
+  ]),
   "promoConsent",
-] as const satisfies readonly SeminarField[];
+];
 
 /**
  * Server Action behind the BeautyUni 2-Day Seminar Feedback Survey.

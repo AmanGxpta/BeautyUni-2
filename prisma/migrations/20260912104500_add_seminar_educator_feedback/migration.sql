@@ -1,0 +1,29 @@
+-- Q7 of the seminar survey: every educator, named, rated 1-5, and commented
+-- on individually.
+--
+-- One JSONB map keyed by the educator's slug, holding both halves of what was
+-- asked about that person:
+--   {"reginald-laws": {"rating": 5, "comment": "Clear, and generous with it"}}
+--
+-- Rather than columns per educator. The roster is `SEMINAR_EDUCATORS` in
+-- `lib/seminar-survey.ts` and it changes from one seminar to the next; columns
+-- per name would need a migration before a new educator could be asked about,
+-- and would leave the table carrying columns that only ever applied to one
+-- event. Holding the rating and the comment in one entry also means reading a
+-- response never has to pair a number in one column with words in another.
+--
+-- `comment` is null when it was left blank; it is optional on purpose, for the
+-- same reason the "what would you change?" question is.
+--
+-- Per-educator averages still come out without naming anyone in the query:
+--   SELECT key AS educator, avg((value->>'rating')::int) AS rating
+--   FROM seminar_feedback, jsonb_each(educator_feedback)
+--   GROUP BY key ORDER BY rating DESC;
+--
+-- NOT NULL DEFAULT '{}' backfills the responses collected before this question
+-- existed, and `{}` is the honest reading of them: nobody was rated there
+-- because nobody was asked. Additive — no existing column is touched, and the
+-- rows already in the table keep every answer they came with.
+
+-- AlterTable
+ALTER TABLE "seminar_feedback" ADD COLUMN     "educator_feedback" JSONB NOT NULL DEFAULT '{}';
