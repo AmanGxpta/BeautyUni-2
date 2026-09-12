@@ -7,7 +7,7 @@ import { CAPABILITIES, FOUNDERS } from "@/lib/content";
 
 const title = "About";
 const description =
-  "BeautyUni is a capability-first education platform for beauty, wellness and medaesthetics — built on decades of experience in education, industry development and professional standards.";
+  "BeautyUni is a capability-first education platform for beauty, wellness and medaesthetics, built on decades of experience in education, industry development and professional standards.";
 
 export const metadata: Metadata = {
   title,
@@ -40,7 +40,7 @@ export default function Page() {
               style={{ "--d": "180ms" } as React.CSSProperties}
             >
               BeautyUni is a place for the industry to learn, share ideas and
-              grow — through education with real depth and purpose. It was
+              grow, through education with real depth and purpose. It was
               created to help professionals go beyond learning techniques and
               build the capabilities that make careers and businesses last.
             </p>
@@ -64,7 +64,7 @@ export default function Page() {
             <div className="s-stat">
               <span className="s-stat__n">2</span>
               <span className="s-stat__l">
-                Continents the founders build across — Mumbai and London
+                Continents the founders build across: Mumbai and London
               </span>
             </div>
           </div>
@@ -96,7 +96,7 @@ export default function Page() {
             </p>
             <p className="s-body">
               We deliver it through live events, workshops, podcasts, digital
-              learning, industry conversations and community-building —
+              learning, industry conversations and community-building,
               supporting professionals, salon and skin-clinic owners, educators,
               artists, brands, manufacturers, suppliers and emerging industry
               leaders.
@@ -207,7 +207,7 @@ export default function Page() {
             Learn with us. Grow <em>with the industry.</em>
           </>
         }
-        body="Education, live events and the From Passion to Profit podcast — for professionals across beauty, wellness and medaesthetics."
+        body="Education, live events and the From Passion to Profit podcast, for professionals across beauty, wellness and medaesthetics."
         secondary={{ href: "/programmes", label: "See programmes" }}
       />
     </Shell>

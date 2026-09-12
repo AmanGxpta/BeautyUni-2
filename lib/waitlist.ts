@@ -89,7 +89,7 @@ const MISSING_ANSWER: Record<keyof WaitlistAnswers, string> = {
   changesTeamComms:
     "Let us know whether this changes how you talk to your team.",
   helpsGuestExperience: "Let us know whether the Rockstar way would help.",
-  educationIdeas: "Tell us what we could add — a line is plenty.",
+  educationIdeas: "Tell us what we could add, a line is plenty.",
 };
 
 export function isWaitlistSource(v: unknown): v is WaitlistSource {

@@ -81,7 +81,7 @@ const SECTIONS: readonly LegalSection[] = [
     body: (
       <p>
         We do not sell your data. We share it only with the service providers
-        who help us operate — our database host and our email provider — and
+        who help us operate (our database host and our email provider) and
         where required by law.
       </p>
     ),
@@ -114,7 +114,7 @@ export default function Page() {
     <LegalPage
       eyebrow="Legal"
       heading="Privacy policy"
-      status="Draft — pending legal review"
+      status="Draft, pending legal review"
       updated="11 September 2026"
       sections={SECTIONS}
       footnote="This is placeholder wording provided for launch. BeautyUni should have it reviewed against the Digital Personal Data Protection Act, 2023 and any other applicable law before relying on it."

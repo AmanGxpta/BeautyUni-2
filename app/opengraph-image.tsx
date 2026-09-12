@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const alt =
-  "BeautyUni — learn the craft, then learn the business behind it";
+  "BeautyUni: learn the craft, then learn the business behind it";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

@@ -102,7 +102,7 @@ export function ScreenSubmit() {
           color: "var(--ink-3)",
         }}
       >
-        I struggled with the crown section — feedback welcome.
+        I struggled with the crown section, feedback welcome.
       </div>
     </Screen>
   );

@@ -99,7 +99,7 @@ export default function Page() {
     <LegalPage
       eyebrow="Legal"
       heading="Terms of use"
-      status="Draft — pending legal review"
+      status="Draft, pending legal review"
       updated="11 September 2026"
       sections={SECTIONS}
       footnote="Placeholder wording provided for launch. Have this reviewed by a qualified adviser before relying on it."

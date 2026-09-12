@@ -107,7 +107,7 @@ export function ScreenCerts() {
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ fontWeight: 700, fontSize: 14 }}>Modern Balayage Foundations</div>
-          <div style={{ fontSize: 12, color: "var(--ink-2)", marginBottom: 6 }}>38% — pass the exam to unlock</div>
+          <div style={{ fontSize: 12, color: "var(--ink-2)", marginBottom: 6 }}>38%, pass the exam to unlock</div>
           <ProgressBar value={38} />
         </div>
       </div>

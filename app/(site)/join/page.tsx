@@ -6,7 +6,7 @@ import { CONTACT } from "@/lib/content";
 
 const title = "Join the community";
 const description =
-  "Education, live events and the From Passion to Profit podcast — for professionals across beauty, wellness and medaesthetics. Tell us who you are and the team will be in touch.";
+  "Education, live events and the From Passion to Profit podcast, for professionals across beauty, wellness and medaesthetics. Tell us who you are and the team will be in touch.";
 
 export const metadata: Metadata = {
   title,
@@ -34,7 +34,7 @@ const PERKS = [
   {
     ic: "layers",
     t: "Education with depth",
-    p: "Technical standards, consultation, leadership and commercial thinking — taught as one subject.",
+    p: "Technical standards, consultation, leadership and commercial thinking, taught as one subject.",
   },
   {
     ic: "shield",
@@ -76,7 +76,7 @@ export default async function Page({
             <p className="s-lede" style={{ marginTop: 0 }}>
               Education, live events and the{" "}
               <em style={{ fontStyle: "italic" }}>From Passion to Profit</em>{" "}
-              podcast — for professionals across beauty, wellness and
+              podcast, for professionals across beauty, wellness and
               medaesthetics. Fill this in and the team will be in touch.
             </p>
 

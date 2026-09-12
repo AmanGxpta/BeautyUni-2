@@ -41,9 +41,9 @@ const raleway = Raleway({
   display: "swap",
 });
 
-const title = "BeautyUni — learn the craft, then the business behind it";
+const title = "BeautyUni: learn the craft, then the business behind it";
 const description =
-  "Capability-first education for beauty, wellness and medaesthetics. Technical mastery, consultation, leadership and commercial thinking — in one place, taught with real depth.";
+  "Capability-first education for beauty, wellness and medaesthetics. Technical mastery, consultation, leadership and commercial thinking, taught together with real depth.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

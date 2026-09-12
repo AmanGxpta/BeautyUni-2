@@ -30,7 +30,7 @@ const EYEBROW = "Welcome to BeautyUni";
 const HEADLINE = "You're in.";
 
 const BODY = [
-  "Thanks for joining the BeautyUni community. You'll hear from us about programmes, live events and new episodes of From Passion to Profit — and nothing else.",
+  "Thanks for joining the BeautyUni community. You'll hear from us about programmes, live events and new episodes of From Passion to Profit, and nothing else.",
 ];
 
 const NEXT_LEAD = "What to expect:";
@@ -320,7 +320,7 @@ export function communityWelcomeText(siteUrl: string, name?: string): string {
     ...BODY.flatMap((para) => [para, ""]),
     NEXT_LEAD,
     "",
-    ...NEXT.map(([title, body]) => `* ${title} — ${body}`),
+    ...NEXT.map(([title, body]) => `* ${title}: ${body}`),
     "",
     `${CTA}: ${siteUrl}/podcast`,
     "",

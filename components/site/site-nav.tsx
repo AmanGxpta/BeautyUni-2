@@ -94,7 +94,7 @@ export function SiteNav({ onDark = false }: { onDark?: boolean }) {
             <span />
           </button>
 
-          <Link className="s-nav__logo" href="/" aria-label="BeautyUni — home">
+          <Link className="s-nav__logo" href="/" aria-label="BeautyUni home">
             {/* Two files rather than one tinted mark: the wordmark's dot is a
                 fixed brand colour in both, and the lettering has to flip
                 between ink and cream as the bar changes surface. */}

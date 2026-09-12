@@ -42,7 +42,7 @@ export function ScreenCourseOverview() {
             </ProgressRing>
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 700, fontSize: 14 }}>9 of 48 clips done</div>
-              <div style={{ fontSize: 12, color: "var(--ink-2)" }}>Keep going — exam unlocks at 100%</div>
+              <div style={{ fontSize: 12, color: "var(--ink-2)" }}>Keep going, exam unlocks at 100%</div>
             </div>
           </div>
         </div>

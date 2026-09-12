@@ -5,7 +5,7 @@ import { SeminarFeedbackForm } from "@/components/seminar/seminar-feedback-form"
 
 const title = "Seminar feedback · BeautyUni";
 const description =
-  "Tell us how the two-days seminar landed — nine questions on the content, the speakers and the event, and what you'll put into practice next.";
+  "Tell us how the two-days seminar landed: nine questions on the content, the speakers and the event, and what you'll put into practice next.";
 
 export const metadata: Metadata = {
   // Absolute: the root layout's "%s · Rockstar" template is the landing
@@ -43,7 +43,7 @@ export default function Page() {
       <div className="sf-glow" aria-hidden="true" />
 
       <header className="sf-bar">
-        <Link className="sf-brand" href="/" aria-label="BeautyUni — home">
+        <Link className="sf-brand" href="/" aria-label="BeautyUni home">
           {/* The same header wordmark the site nav carries, so arriving here
               from a QR code lands on the brand the rest of the site wears. */}
           <Image

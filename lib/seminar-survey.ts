@@ -162,7 +162,7 @@ export const SEMINAR_QUESTIONS: readonly SeminarQuestion[] = [
     kind: "text",
     name: "improvementIdeas",
     label: "What would make the next seminar even more valuable for you?",
-    hint: "Topics, speakers, formats, improvements — anything you would like to see.",
+    hint: "Topics, speakers, formats, improvements: anything you would like to see.",
     placeholder: "What you would change, add, or do differently",
     optional: true,
   },

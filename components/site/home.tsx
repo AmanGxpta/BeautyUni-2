@@ -67,7 +67,7 @@ export function Home() {
               style={{ "--d": "220ms" } as React.CSSProperties}
             >
               BeautyUni is a capability-first education platform for the beauty,
-              wellness and medaesthetics industry — built to help professionals
+              wellness and medaesthetics industry, built to help professionals
               go beyond technique and develop the capabilities that make careers
               and businesses last.
             </p>
@@ -121,7 +121,7 @@ export function Home() {
                 ))}
               </div>
               <p className="s-index__foot">
-                Craft, clients, people and business — brought together in one
+                Craft, clients, people and business, brought together in one
                 place rather than taught as four unrelated subjects.
               </p>
             </div>
@@ -224,7 +224,7 @@ export function Home() {
               <p>
                 It is education designed not simply to show professionals{" "}
                 <b>what to do</b>, but to help them understand{" "}
-                <b>why it works</b> — and how to turn that capability into
+                <b>why it works</b>, and how to turn that capability into
                 lasting professional success.
               </p>
               <p>
@@ -307,7 +307,7 @@ export function Home() {
             </div>
             <p className="s-who__foot">
               Different roles face different challenges. Meaningful growth still
-              comes from the same four dimensions — craft, clients, people and
+              comes from the same four dimensions: craft, clients, people and
               business.
             </p>
           </div>
@@ -342,8 +342,8 @@ export function Home() {
               <h2 className="s-serif s-h2">From Passion to Profit</h2>
               <p className="s-lede">
                 Candid, long-form conversations with the founders, educators and
-                leaders shaping the beauty industry — not just the visible
-                success, but the decisions, systems, setbacks and habits behind
+                leaders shaping the beauty industry, looking past the visible
+                success to the decisions, systems, setbacks and habits behind
                 it.
               </p>
             </div>
@@ -501,9 +501,8 @@ export function Home() {
                 Lasting success needs more than the latest technique.
               </h2>
               <p className="s-lede">
-                The industry is constantly evolving — new products, trends,
-                techniques and opportunities appear all the time. What holds
-                steady is what sits underneath them.
+                New products, trends, techniques and opportunities appear all
+                the time. What holds steady is what sits underneath them.
               </p>
             </div>
 
@@ -540,7 +539,7 @@ export function Home() {
             Come learn and grow <em>with BeautyUni.</em>
           </>
         }
-        body="Education, live events and the From Passion to Profit podcast — for professionals across beauty, wellness and medaesthetics. Tell us who you are and the team will be in touch."
+        body="Education, live events and the From Passion to Profit podcast, for professionals across beauty, wellness and medaesthetics. Tell us who you are and the team will be in touch."
         secondary={{ href: "/programmes", label: "See programmes" }}
       />
     </>

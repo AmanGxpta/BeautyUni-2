@@ -39,7 +39,7 @@ const STRANDS = [
   {
     n: "03",
     t: "Career & business",
-    p: "Turning technical ability into client trust, loyalty and opportunity — the part of the craft that decides whether a career compounds.",
+    p: "Turning technical ability into client trust, loyalty and opportunity: the part of the craft that decides whether a career compounds.",
   },
 ];
 
@@ -97,7 +97,7 @@ export default function Page() {
               </a>
               <a
                 className="s-btn s-btn--lg s-btn--ghost"
-                href={`mailto:${CONTACT.email}?subject=BeautyUni%20programmes%20—%20enquiry`}
+                href={`mailto:${CONTACT.email}?subject=BeautyUni%20programmes%20enquiry`}
               >
                 Speak to our team
                 <span className="s-btn__arr">
@@ -180,7 +180,7 @@ export default function Page() {
                 </Link>
                 <a
                   className="s-btn s-btn--lg s-btn--ghost"
-                  href={`mailto:${CONTACT.email}?subject=Rock%20Star%20Success%20System%20—%20enquiry`}
+                  href={`mailto:${CONTACT.email}?subject=Rock%20Star%20Success%20System%20enquiry`}
                 >
                   Email the team
                   <span className="s-btn__arr">
@@ -209,7 +209,7 @@ export default function Page() {
 
             <blockquote className="s-quote">
               <p>{PROGRAMME.quote}</p>
-              <cite>— {PROGRAMME.quoteBy}</cite>
+              <cite>{PROGRAMME.quoteBy}</cite>
             </blockquote>
 
             <div className="s-days" style={{ marginTop: 40 }}>

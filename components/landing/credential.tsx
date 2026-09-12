@@ -16,7 +16,7 @@ export function Credential() {
           <h2 className="rs-display sec-h2">Finish the course, walk out with something you can show.</h2>
           <p className="sec-lede">
             Every course closes with a final exam and a reviewed submission. Pass both and Rockstar issues a
-            certificate signed by your educator — a link for your bio, a PDF for the salon wall.
+            certificate signed by your educator: a link for your bio, a PDF for the salon wall.
           </p>
           <ul className="cred-list">
             {POINTS.map(([ic, t, b]) => (

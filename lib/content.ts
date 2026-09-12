@@ -50,27 +50,27 @@ export const CAPABILITIES: readonly Capability[] = [
     n: "01",
     title: "Technical Mastery",
     kicker:
-      "Raise technical standards and understand the principles behind the craft — not simply the steps.",
+      "Raise technical standards and understand the principles behind the craft, not simply the steps.",
     body: "BeautyUni’s approach focuses on developing real capability and contemporary technical understanding, helping professionals build mastery that goes deeper than following a demonstration.",
   },
   {
     n: "02",
     title: "Consultation & Communication",
     kicker:
-      "Technical ability becomes more powerful when it is paired with the ability to understand and communicate with clients.",
-    body: "BeautyUni focuses on better conversations, stronger consultation and confident communication — helping professionals build client trust, loyalty and repeat business.",
+      "Technical ability becomes more powerful when paired with the ability to communicate with clients.",
+    body: "BeautyUni focuses on better conversations, stronger consultation and confident communication, helping professionals build client trust, loyalty and repeat business.",
   },
   {
     n: "03",
     title: "Leadership & Teams",
     kicker: "As a business grows, technical ability alone isn’t enough.",
-    body: "BeautyUni develops the people skills required to hire, lead and retain a team, helping professionals grow from being practitioners into effective leaders.",
+    body: "BeautyUni develops the people skills required to hire well, lead and retain a team, helping professionals grow from being practitioners into effective, confident leaders.",
   },
   {
     n: "04",
     title: "Visibility & Commercial Thinking",
     kicker: "Great work also needs to be positioned effectively.",
-    body: "BeautyUni explores the commercial side of the profession — including positioning, pricing and digital visibility — helping professionals navigate an increasingly crowded market.",
+    body: "BeautyUni explores the commercial side of the profession, including positioning, pricing and digital visibility, helping professionals navigate an increasingly crowded market.",
   },
 ];
 
@@ -120,7 +120,7 @@ export const EPISODES: readonly Episode[] = [
     title: "The business behind great hair: building a career that lasts",
     guests: "With Rodney Cutler and Reginald Laws",
     summary:
-      "Rodney Cutler on falling into hairdressing by accident and building Cutler Salon in New York — and, with Reg Laws, what it takes to move from creative stylist to owner: mastering the fundamentals, continuous education, and building a salon culture that lasts.",
+      "Rodney Cutler on falling into hairdressing by accident and building Cutler Salon in New York. With Reg Laws, what it takes to move from creative stylist to owner: mastering the fundamentals, continuous education, and building a salon culture that lasts.",
     poster: "/site/ep-9QUegFnCtOw.jpg",
   },
   {
@@ -129,7 +129,7 @@ export const EPISODES: readonly Episode[] = [
     title: "The truth behind “overnight success” in the beauty industry",
     guests: "With hosts Roopa Ambekar and Vikas Vij",
     summary:
-      "Roopa and Vikas on what it really takes to turn passion into a profitable, sustainable business: why perfectionism stalls growth, why discounting is a race to the bottom, why owners must know their own P&L, and why social media is part of a strategy — not the strategy.",
+      "Roopa and Vikas on what it really takes to turn passion into a profitable, sustainable business: why perfectionism stalls growth, why discounting is a race to the bottom, why owners must know their own P&L, and why social media is part of a strategy, not the strategy.",
     poster: "/site/ep-rfHHj6QV4FM.jpg",
   },
   {
@@ -137,9 +137,9 @@ export const EPISODES: readonly Episode[] = [
     youtubeId: "RLSYodjXoqk",
     title: "This one skill can 10x your salon business",
     guests:
-      "With Reginald Laws — Founder, PR at Partners; creator of the Rock Star Success System",
+      "With Reginald Laws, founder of PR at Partners and creator of the Rock Star Success System",
     summary:
-      "Reg Laws argues the most valuable skill in hairdressing isn’t the cut — it’s learning to truly hear the person in your chair. Four decades of lessons on communication, client experience and the consultation habits that drive retention and pricing power.",
+      "Reg Laws argues the most valuable skill in hairdressing isn’t the cut. It’s learning to truly hear the person in your chair. Four decades of lessons on communication, client experience and the consultation habits that drive retention and pricing power.",
     poster: "/site/ep-RLSYodjXoqk.jpg",
   },
 ];

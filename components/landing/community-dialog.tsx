@@ -94,7 +94,7 @@ const QUESTIONS: Question[] = [
     name: "educationIdeas",
     label:
       "Is there anything we could add to our journey of education in India?",
-    placeholder: "Skills, formats, cities — tell us what's missing",
+    placeholder: "Skills, formats, cities: tell us what's missing",
   },
 ];
 

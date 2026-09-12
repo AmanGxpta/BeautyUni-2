@@ -7,9 +7,9 @@ import { Ic } from "@/components/site/icons";
 import { Shell } from "@/components/site/shell";
 import { EPISODES } from "@/lib/content";
 
-const title = "From Passion to Profit — the podcast";
+const title = "From Passion to Profit: the podcast";
 const description =
-  "Candid, long-form conversations with the artists, founders, educators and business leaders shaping beauty, wellness and medaesthetics. Not just the success — the decisions, systems, setbacks and habits behind it.";
+  "Candid, long-form conversations with the artists, founders, educators and business leaders shaping beauty, wellness and medaesthetics, looking past the success to the decisions, systems, setbacks and habits behind it.";
 
 export const metadata: Metadata = {
   title: { absolute: `${title} · BeautyUni` },
@@ -62,8 +62,8 @@ export default function Page() {
             >
               Candid, long-form conversations with the artists, founders,
               educators and business leaders shaping beauty, wellness and
-              medaesthetics. Not just the success — the decisions, systems,
-              setbacks and habits behind the long road to it.
+              medaesthetics, looking past the success to the decisions,
+              systems, setbacks and habits behind the long road to it.
             </p>
             <div
               className="s-pod__platforms s-enter"

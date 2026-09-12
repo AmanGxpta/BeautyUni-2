@@ -22,7 +22,7 @@ export function SiteFooter() {
           <Link
             className="s-footer__logo"
             href="/"
-            aria-label="BeautyUni — home"
+            aria-label="BeautyUni home"
           >
             <Image
               src="/site/logo-footer.png"

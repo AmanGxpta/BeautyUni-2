@@ -53,7 +53,7 @@ export function EpisodeItem({
               className="s-ep__play"
               type="button"
               onClick={() => setPlaying(true)}
-              aria-label={`Play — ${ep.title}`}
+              aria-label={`Play ${ep.title}`}
             >
               <span>
                 <Ic n="play" size={24} fill />

@@ -70,7 +70,7 @@ export function WaitlistConfirmation({ siteUrl }: { siteUrl: string }) {
             maxWidth: 0,
           }}
         >
-          You&rsquo;re on the list for early access — we&rsquo;ll email you as
+          You&rsquo;re on the list for early access. We&rsquo;ll email you as
           we get closer to launch.
         </div>
 
@@ -282,7 +282,7 @@ export function waitlistConfirmationText(): string {
     ...BODY.flatMap((para) => [para, ""]),
     STEPS_LEAD,
     "",
-    ...STEPS.map(([title, body]) => `* ${title} — ${body}`),
+    ...STEPS.map(([title, body]) => `* ${title}: ${body}`),
     "",
     `${SIGN_OFF}.`,
   ].join("\n");

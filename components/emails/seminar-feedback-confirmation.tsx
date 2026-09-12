@@ -21,15 +21,15 @@
  * nothing in a recipient's inbox.
  */
 
-/* The /seminar-feedback palette, flattened for mail. */
-const PAPER = "#F7F5F6"; // tertiary — the canvas the card sits on
+/* The site palette, flattened for mail — matches components/emails/community-welcome.tsx. */
+const PAPER = "#FCF7F3"; // --s-cream — the canvas the card sits on
 const CARD = "#FFFFFF";
-const WELL = "#F7F5F6";
-const INK = "#141014";
-const INK_2 = "#4E464A";
-const INK_3 = "#8B8085";
-const PLUM = "#7D0F49";
-const LINE = "#EAE9EA"; // --line flattened: rgba(20,16,20,.09) over white
+const WELL = "#F4EAE1"; // --s-sand
+const INK = "#1E1713";
+const INK_2 = "#4F443E";
+const INK_3 = "#8A7D75";
+const TERRA = "#C75C3C"; // --s-terra
+const LINE = "#E9E2DC"; // --s-line flattened: rgba(30,23,19,.10) over white
 const SANS =
   "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
 
@@ -151,7 +151,7 @@ export function SeminarFeedbackConfirmation({ siteUrl }: { siteUrl: string }) {
                             fontWeight: 600,
                             letterSpacing: "0.22em",
                             textTransform: "uppercase",
-                            color: PLUM,
+                            color: TERRA,
                           }}
                         >
                           {EYEBROW}
@@ -237,7 +237,7 @@ export function SeminarFeedbackConfirmation({ siteUrl }: { siteUrl: string }) {
                                               fontFamily: SANS,
                                               fontSize: "15px",
                                               fontWeight: 600,
-                                              color: PLUM,
+                                              color: TERRA,
                                             }}
                                           >
                                             {title}
@@ -278,7 +278,7 @@ export function SeminarFeedbackConfirmation({ siteUrl }: { siteUrl: string }) {
                             <tr>
                               <td
                                 style={{
-                                  backgroundColor: PLUM,
+                                  backgroundColor: TERRA,
                                   borderRadius: "8px",
                                 }}
                               >

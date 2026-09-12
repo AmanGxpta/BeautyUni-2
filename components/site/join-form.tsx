@@ -85,7 +85,7 @@ export function JoinForm({ source = "join" }: { source?: string }) {
         <p className="s-body">
           {state.alreadyJoined
             ? "We had your details already, and we’ve updated them with what you just sent. The team will be in touch about programmes, events and new podcast episodes."
-            : "Thanks for joining the BeautyUni community. Check your inbox for a welcome note — the team will be in touch about programmes, events and new episodes of From Passion to Profit."}
+            : "Thanks for joining the BeautyUni community. Check your inbox for a welcome note, and the team will be in touch about programmes, events and new episodes of From Passion to Profit."}
         </p>
         <div className="s-done__actions">
           <Link className="s-btn" href="/podcast">
